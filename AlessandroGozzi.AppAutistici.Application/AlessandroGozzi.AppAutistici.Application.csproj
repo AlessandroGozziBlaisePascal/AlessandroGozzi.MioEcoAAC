@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\Creation\AddRoutine\" />
+    <Folder Include="Commands\Creation\AddActivity\" />
+    <Folder Include="Commands\Updates\" />
+    <Folder Include="Commands\Deletion\" />
+    <Folder Include="Commands\Reorganization\ChangeActionsOrder\" />
+    <Folder Include="Commands\Reorganization\ChangeActivitiesOrder\" />
+    <Folder Include="Commands\Reorganization\" />
+    <Folder Include="Commands\Updates\UpdateRoutine\" />
+    <Folder Include="Commands\Updates\UpdateActivity\" />
+    <Folder Include="Commands\Updates\UpdateAction\" />
+    <Folder Include="Commands\Deletion\RemoveAction\" />
+    <Folder Include="Commands\Deletion\RemoveActivity\" />
+    <Folder Include="Commands\Deletion\RemoveRoutine\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AlessandroGozzi.AppACC.SharedKernel\AlessandroGozzi.AppACC.SharedKernel.csproj" />
+    <ProjectReference Include="..\AlessandroGozzi.AppCAA.Domain\AlessandroGozzi.AppCAA.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

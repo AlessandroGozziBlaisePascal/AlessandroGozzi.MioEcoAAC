@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppCAA.Domain.Entities;
 using AlessandroGozzi.AppCAA.Domain.ValueObjects;
 
-namespace AlessandroGozzi.AppCAA.Domain.AggregateRoots
+namespace AlessandroGozzi.AppCAA.Domain.Entities
 {
-    public class Activity: AggregateRoot
+    public class Activity: Entity
     {
         private readonly List<RoutineAction> _actions = new();
         public List<RoutineAction> Actions => [.. _actions.AsReadOnly()];
         public string Name { get; private set; }
         public bool IsFinished => _actions.All(a => a.IsFinished);
+        public bool IsDeleted { get; private set; } = false; //For soft delete
         public SpeechText Text { get; private set; }
 
         private Activity() { } // For EF Core

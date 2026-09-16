@@ -14,16 +14,30 @@ namespace AlessandroGozzi.AppCAA.Domain.Entities
         public string Description { get; init; }
         public SpeechText Audio { get; init; }
         public bool IsFinished { get; private set; } = false;
+        public bool IsDeleted { get; private set; } = false; //For soft delete
         public Guid ActivityId { get; init; }
 
         public RoutineAction() { } // For EF Core
 
-        public RoutineAction(ImageUrl image, SpeechText audio, Guid activityId, string description)
+        private RoutineAction(ImageUrl image, SpeechText audio, Guid activityId, string description)
         {
             Image = image;
             Audio = audio;
             ActivityId = activityId;
             Description = description;
+        }
+        public static Result<RoutineAction> Create(ImageUrl image, SpeechText audio, Guid activityId, string description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+                return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidDescription", "The description cannot be null or empty."));
+            if(image == null)
+                return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidImage", "The image cannot be null."));
+            if(audio == null)
+                return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidAudio", "The audio cannot be null."));
+            if(activityId == Guid.Empty)
+                return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidActivityId", "The activity ID cannot be empty."));
+            var routineAction = new RoutineAction(image, audio, activityId, description);
+            return Result.Success(routineAction);
         }
 
         public Result MarkAsFinished()

@@ -7,5 +7,8 @@ using AlessandroGozzi.AppCAA.Domain.AggregateRoots;
 
 namespace AlessandroGozzi.AppCAA.Domain.Repositories
 {
-    public interface IRoutineRepository : IRepository<Routine>;
+    public interface IRoutineRepository : IRepository<Routine>
+    {
+
+    }
 }
