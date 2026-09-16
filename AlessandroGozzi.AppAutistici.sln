@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37614.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6C83A596-D32D-B35F-00DD-F0C99B673980}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F18B343A-5544-4977-AC2B-D48A6EABEA77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A1A76CFE-C84A-4E95-9A62-AF08C5D4D3DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppCAA.Domain", "AlessandroGozzi.AppCAA.Domain\AlessandroGozzi.AppCAA.Domain.csproj", "{2335714B-070B-492C-9856-2512B08F7FA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppACC.SharedKernel", "AlessandroGozzi.AppACC.SharedKernel\AlessandroGozzi.AppACC.SharedKernel.csproj", "{5BF2AC6A-940A-4185-883F-296D93616316}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2335714B-070B-492C-9856-2512B08F7FA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2335714B-070B-492C-9856-2512B08F7FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2335714B-070B-492C-9856-2512B08F7FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2335714B-070B-492C-9856-2512B08F7FA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BF2AC6A-940A-4185-883F-296D93616316}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BF2AC6A-940A-4185-883F-296D93616316}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BF2AC6A-940A-4185-883F-296D93616316}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BF2AC6A-940A-4185-883F-296D93616316}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2335714B-070B-492C-9856-2512B08F7FA2} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
+		{5BF2AC6A-940A-4185-883F-296D93616316} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E61840C5-5EB1-4817-88A4-1766906A1001}
+	EndGlobalSection
+EndGlobal
