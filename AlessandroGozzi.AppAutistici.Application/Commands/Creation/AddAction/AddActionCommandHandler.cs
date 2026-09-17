@@ -5,9 +5,9 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using AlessandroGozzi.AppAAC.Application.Mappers;
-using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppCAA.Domain.Entities;
-using AlessandroGozzi.AppCAA.Domain.Repositories;
+using AlessandroGozzi.AppAAC.SharedKernel;
+using AlessandroGozzi.AppAAC.Domain.Entities;
+using AlessandroGozzi.AppAAC.Domain.Repositories;
 using MediatR;
 
 namespace AlessandroGozzi.AppAAC.Application.Commands.Creation.AddAction

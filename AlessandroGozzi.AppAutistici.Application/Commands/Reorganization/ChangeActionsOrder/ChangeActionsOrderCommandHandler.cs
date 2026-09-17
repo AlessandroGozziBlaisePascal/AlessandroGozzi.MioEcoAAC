@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppAutistici.Application.Dtos;
-using AlessandroGozzi.AppAutistici.Application.Mappers;
-using AlessandroGozzi.AppCAA.Domain.Entities;
-using AlessandroGozzi.AppCAA.Domain.Repositories;
+using AlessandroGozzi.AppAAC.Application.Mappers;
+using AlessandroGozzi.AppAAC.Domain.Entities;
+using AlessandroGozzi.AppAAC.Domain.Repositories;
+using AlessandroGozzi.AppAAC.SharedKernel;
 using MediatR;
 
-namespace AlessandroGozzi.AppAutistici.Application.Commands.Reorganization.ChangeActionsOrder
+namespace AlessandroGozzi.AppAAC.Application.Commands.Reorganization.ChangeActionsOrder
 {
     public class ChangeActionsOrderCommandHandler: IRequestHandler<ChangeActionsOrderCommand, Result>
     {

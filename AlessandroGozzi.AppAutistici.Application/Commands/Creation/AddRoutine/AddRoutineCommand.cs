@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppAutistici.Application.Dtos;
+using AlessandroGozzi.AppAAC.Application.Dtos;
+using AlessandroGozzi.AppAAC.SharedKernel;
 using MediatR;
 
-namespace AlessandroGozzi.AppAutistici.Application.Commands.Creation.AddRoutine
+namespace AlessandroGozzi.AppAAC.Application.Commands.Creation.AddRoutine
 {
     public record AddRoutineCommand(
         string Name, 

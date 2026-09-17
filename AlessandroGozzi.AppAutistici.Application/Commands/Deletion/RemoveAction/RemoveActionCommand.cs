@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
+using AlessandroGozzi.AppAAC.SharedKernel;
 using MediatR;
 
-namespace AlessandroGozzi.AppAutistici.Application.Commands.Deletion.RemoveAction
+namespace AlessandroGozzi.AppAAC.Application.Commands.Deletion.RemoveAction
 {
     public record RemoveActionCommand(
         Guid RoutineId, 

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppCAA.Domain.Repositories;
+using AlessandroGozzi.AppAAC.SharedKernel;
+using AlessandroGozzi.AppAAC.Domain.Repositories;
 using MediatR;
 
-namespace AlessandroGozzi.AppAutistici.Application.Commands.Deletion.RemoveRoutine
+namespace AlessandroGozzi.AppAAC.Application.Commands.Deletion.RemoveRoutine
 {
     public class RemoveRoutineCommandHandler: IRequestHandler<RemoveRoutineCommand, Result>
     {

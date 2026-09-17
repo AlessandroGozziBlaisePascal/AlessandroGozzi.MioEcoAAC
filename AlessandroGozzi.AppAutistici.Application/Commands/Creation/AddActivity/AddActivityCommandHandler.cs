@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppAutistici.Application.Mappers;
-using AlessandroGozzi.AppCAA.Domain.Entities;
-using AlessandroGozzi.AppCAA.Domain.Repositories;
+using AlessandroGozzi.AppAAC.SharedKernel;
+using AlessandroGozzi.AppAAC.Domain.Entities;
+using AlessandroGozzi.AppAAC.Domain.Repositories;
 using MediatR;
+using AlessandroGozzi.AppAAC.Application.Mappers;
 
-namespace AlessandroGozzi.AppAutistici.Application.Commands.Creation.AddActivity
+namespace AlessandroGozzi.AppAAC.Application.Commands.Creation.AddActivity
 {
     public class AddActivityCommandHandler: IRequestHandler<AddActivityCommand, Result> 
     {

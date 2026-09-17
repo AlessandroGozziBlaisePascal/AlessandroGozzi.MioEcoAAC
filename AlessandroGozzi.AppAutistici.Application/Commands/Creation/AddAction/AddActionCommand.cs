@@ -1,6 +1,6 @@
-﻿using AlessandroGozzi.AppACC.SharedKernel;
+﻿using AlessandroGozzi.AppAAC.SharedKernel;
 using MediatR;
-using AlessandroGozzi.AppACC.Application.Dtos;
+using AlessandroGozzi.AppAAC.Application.Dtos;
 
 namespace AlessandroGozzi.AppAAC.Application.Commands.Creation.AddAction
 {
