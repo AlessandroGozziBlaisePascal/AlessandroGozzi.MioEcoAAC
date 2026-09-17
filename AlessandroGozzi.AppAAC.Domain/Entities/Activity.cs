@@ -68,15 +68,6 @@ namespace AlessandroGozzi.AppAAC.Domain.Entities
             return action.MarkAsFinished();
         }
 
-        public Result MarkActivityAsFinished()
-        {
-            if (IsFinished)
-                return Result.Failure(Error.Validation("Activity.AlreadyFinished", "The activity is already finished"));
-            if(_actions.Any(a => !a.IsFinished))
-                return Result.Failure(Error.Validation("Activity.NotAllActionsFinished", "Not all routine actions are finished"));
-            return Result.Success();
-        }
-
         public Result SoftDelete()
         {
             if (IsDeleted)

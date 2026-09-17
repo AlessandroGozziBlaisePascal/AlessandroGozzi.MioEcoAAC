@@ -45,6 +45,7 @@ namespace AlessandroGozzi.AppAAC.Application.Commands.Reorganization.ChangeActio
                 }
 
                 var actionResult = RoutineAction.Create(
+                    request.ActivityId,
                     actionImageResult.Value,
                     actionAudioResult.Value,
                     actionDto.Name
