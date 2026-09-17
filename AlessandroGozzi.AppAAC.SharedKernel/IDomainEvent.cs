@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MediatR;
 
-namespace AlessandroGozzi.AppACC.SharedKernel
+namespace AlessandroGozzi.AppAAC.SharedKernel
 {
     public interface IDomainEvent : INotification
     {

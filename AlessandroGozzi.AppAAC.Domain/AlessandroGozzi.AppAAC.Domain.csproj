@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AlessandroGozzi.AppACC.SharedKernel\AlessandroGozzi.AppACC.SharedKernel.csproj" />
+    <ProjectReference Include="..\AlessandroGozzi.AppAAC.SharedKernel\AlessandroGozzi.AppAAC.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

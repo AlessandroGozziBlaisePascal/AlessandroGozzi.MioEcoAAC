@@ -4,13 +4,13 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using AlessandroGozzi.AppAAC.Application.Mappers;
 using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppAutistici.Application.Mappers;
 using AlessandroGozzi.AppCAA.Domain.Entities;
 using AlessandroGozzi.AppCAA.Domain.Repositories;
 using MediatR;
 
-namespace AlessandroGozzi.AppAutistici.Application.Commands.Creation.AddAction
+namespace AlessandroGozzi.AppAAC.Application.Commands.Creation.AddAction
 {
     public class AddActionCommandHandler: IRequestHandler<AddActionCommand, Result>
     {
