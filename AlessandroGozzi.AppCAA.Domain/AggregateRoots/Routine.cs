@@ -19,13 +19,31 @@ namespace AlessandroGozzi.AppCAA.Domain.AggregateRoots
         public RoutineType Type { get; private set; }
         public bool IsDeleted { get; private set; } = false; //For soft delete
 
-        public Routine() { } // For EF Core
+        private Routine() { } // For EF Core
 
-        public Routine(string name, SpeechText text, RoutineType type)
+        private Routine(string name, SpeechText text, RoutineType type)
         {
             Name = name;
             Text = text;
             Type = type;
+        }
+
+        public static Result<Routine> Create(string name, SpeechText text, RoutineType type)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return Result.Failure<Routine>(Error.Validation("Routine.NameRequired", "The routine name is required."));
+            if (text == null || string.IsNullOrWhiteSpace(text.Text))
+                return Result.Failure<Routine>(Error.Validation("Routine.TextRequired", "The routine text is required."));
+            var routine = new Routine(name, text, type);
+            return Result.Success(routine);
+        }
+
+        public Result Remove()
+        {
+            if (IsDeleted)
+                return Result.Failure(Error.Failure("Routine.AlreadyDeleted", "The routine is already marked as deleted."));
+            IsDeleted = true;
+            return Result.Success();
         }
 
         public Result AddActivity(Activity activity)
@@ -36,11 +54,12 @@ namespace AlessandroGozzi.AppCAA.Domain.AggregateRoots
             return Result.Success();
         }
 
-        public Result RemoveActivity(Activity activity)
+        public Result RemoveActivity(Guid activityId)
         {
-            if (!_activities.Contains(activity))
+            var act = _activities.FirstOrDefault(a => a.Id == activityId);
+            if (act == null)
                 return Result.Failure(Error.NotFound("Routine.ActivityNotFound", "The activity was not found in the routine."));
-            _activities.Remove(activity);
+            act.SoftDelete();
             return Result.Success();
         }
 
@@ -50,6 +69,39 @@ namespace AlessandroGozzi.AppCAA.Domain.AggregateRoots
             if (activity == null)
                 return Result.Failure(Error.NotFound("Routine.ActivityNotFound", "The activity was not found in the routine."));
             return activity.AddAction(action);
+        }
+
+        public Result RemoveActionFromActivity(Guid activityId, Guid actionId)
+        {
+            var activity = _activities.FirstOrDefault(a => a.Id == activityId);
+            if (activity == null)
+                return Result.Failure(Error.NotFound("Routine.ActivityNotFound", "The activity was not found in the routine."));
+            return activity.RemoveAction(actionId);
+        }
+
+        public Result ChangeActivityOrder(List<Activity> newOrder)
+        {
+            if (newOrder.Count != _activities.Count || newOrder.Except(_activities).Any())
+                return Result.Failure(Error.Validation("Routine.InvalidActivityOrder", "The new order of activities is invalid."));
+
+            var newOrderIds = new HashSet<Guid>(newOrder.Select(a => a.Id));
+            var currentIds = new HashSet<Guid>(_activities.Select(a => a.Id));
+            if (!newOrderIds.SetEquals(currentIds))
+                return Result.Failure(Error.Validation("Routine.InvalidNewOrder", "The new order must contain the same activities."));
+
+            _activities.Clear();
+            _activities.AddRange(newOrder);
+
+            return Result.Success();
+        }
+
+        public Result ChangeActionOrderInActivity(Guid activityId, List<RoutineAction> newOrder)
+        {
+            var activity = _activities.FirstOrDefault(a => a.Id == activityId);
+            if (activity == null)
+                return Result.Failure(Error.NotFound("Routine.ActivityNotFound", "The activity was not found in the routine."));
+
+            return activity.ChangeOrder(newOrder);
         }
     }
 }

@@ -9,7 +9,8 @@ using MediatR;
 
 namespace AlessandroGozzi.AppAutistici.Application.Commands.Creation.AddAction
 {
-    public record AddActionCommand(Guid RoutineId, 
+    public record AddActionCommand(
+        Guid RoutineId, 
         Guid ActivityId,
         string Name, 
         string ImageUrl, 

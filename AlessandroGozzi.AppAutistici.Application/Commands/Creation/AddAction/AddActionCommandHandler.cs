@@ -43,13 +43,17 @@ namespace AlessandroGozzi.AppAutistici.Application.Commands.Creation.AddAction
                 return Result.Failure(speechTextResult.Error);
             }
 
-            var actionResult = RoutineAction.Create(imUrlResult.Value, speechTextResult.Value, request.ActivityId, request.Name);
+            var actionResult = RoutineAction.Create(imUrlResult.Value, speechTextResult.Value, request.Name);
             if(actionResult.IsFailure)
             {
                 return Result.Failure(actionResult.Error);
             }
 
-            routine.AddActionToActivity(request.ActivityId, actionResult.Value);
+            var result = routine.AddActionToActivity(request.ActivityId, actionResult.Value);
+            if(result.IsFailure)
+            {
+                return Result.Failure(result.Error);
+            }
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return Result.Success();

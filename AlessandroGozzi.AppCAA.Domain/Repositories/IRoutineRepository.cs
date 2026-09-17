@@ -9,6 +9,6 @@ namespace AlessandroGozzi.AppCAA.Domain.Repositories
 {
     public interface IRoutineRepository : IRepository<Routine>
     {
-
+        Task<List<Routine>> GetAllAvailable(CancellationToken cancellationToken = default);
     }
 }

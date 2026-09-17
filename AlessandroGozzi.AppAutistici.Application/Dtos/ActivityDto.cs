@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace AlessandroGozzi.AppAutistici.Application.Dtos
 {
-    public record ActivityDto(Guid Id, List<RoutineActionDto> Actions, string Name, bool IsFinished, string Text);
+    public record ActivityDto(Guid Id, string Image, List<RoutineActionDto> Actions, string Name, bool IsFinished, string SpeechText);
 }
