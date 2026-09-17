@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AlessandroGozzi.AppACC.SharedKernel\AlessandroGozzi.AppACC.SharedKernel.csproj" />
-    <ProjectReference Include="..\AlessandroGozzi.AppCAA.Domain\AlessandroGozzi.AppCAA.Domain.csproj" />
+    <ProjectReference Include="..\AlessandroGozzi.AppAAC.Domain\AlessandroGozzi.AppAAC.Domain.csproj" />
+    <ProjectReference Include="..\AlessandroGozzi.AppAAC.SharedKernel\AlessandroGozzi.AppAAC.SharedKernel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlessandroGozzi.AppAutistici.Application.Dtos
+namespace AlessandroGozzi.AppAAC.Application.Dtos
 {
     public record ActivityDto(Guid Id, string Image, List<RoutineActionDto> Actions, string Name, bool IsFinished, string SpeechText);
 }

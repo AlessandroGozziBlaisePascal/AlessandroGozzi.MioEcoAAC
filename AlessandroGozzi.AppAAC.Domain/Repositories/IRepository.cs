@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
+using AlessandroGozzi.AppAAC.SharedKernel;
 
-namespace AlessandroGozzi.AppCAA.Domain.Repositories
+namespace AlessandroGozzi.AppAAC.Domain.Repositories
 {
     public interface IRepository<T> where T : AggregateRoot
     {

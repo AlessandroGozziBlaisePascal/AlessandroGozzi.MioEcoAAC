@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlessandroGozzi.AppCAA.Domain.Enums
+namespace AlessandroGozzi.AppAAC.Domain.Enums
 {
     public enum RoutineType
     {

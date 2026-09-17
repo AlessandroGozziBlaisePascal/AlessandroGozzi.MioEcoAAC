@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AlessandroGozzi.AppACC.SharedKernel;
 using AlessandroGozzi.AppCAA.Domain.ValueObjects;
 
-namespace AlessandroGozzi.AppAutistici.Application.Mappers
+namespace AlessandroGozzi.AppAAC.Application.Mappers
 {
     public static class ImageUrlMapper
     {

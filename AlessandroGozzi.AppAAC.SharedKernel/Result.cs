@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AlessandroGozzi.AppACC.SharedKernel
+namespace AlessandroGozzi.AppAAC.SharedKernel
 {
     public class Result
     {

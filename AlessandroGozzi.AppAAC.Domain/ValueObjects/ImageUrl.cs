@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
+using AlessandroGozzi.AppAAC.SharedKernel;
 
-namespace AlessandroGozzi.AppCAA.Domain.ValueObjects
+namespace AlessandroGozzi.AppAAC.Domain.ValueObjects
 {
     public record ImageUrl
     {

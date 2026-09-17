@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppAutistici.Application.Dtos;
+﻿using AlessandroGozzi.AppACC.SharedKernel;
 using MediatR;
+using AlessandroGozzi.AppACC.Application.Dtos;
 
-namespace AlessandroGozzi.AppAutistici.Application.Commands.Creation.AddAction
+namespace AlessandroGozzi.AppAAC.Application.Commands.Creation.AddAction
 {
     public record AddActionCommand(
         Guid RoutineId, 

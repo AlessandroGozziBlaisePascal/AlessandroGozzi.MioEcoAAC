@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppACC.SharedKernel;
-using AlessandroGozzi.AppCAA.Domain.ValueObjects;
+using AlessandroGozzi.AppAAC.Domain.ValueObjects;
+using AlessandroGozzi.AppAAC.SharedKernel;
 
-namespace AlessandroGozzi.AppCAA.Domain.Entities
+namespace AlessandroGozzi.AppAAC.Domain.Entities
 {
     public class RoutineAction: Entity  
     {
