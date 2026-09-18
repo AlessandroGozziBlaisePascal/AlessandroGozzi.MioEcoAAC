@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\Updates\" />
-    <Folder Include="Commands\Updates\UpdateRoutine\" />
-    <Folder Include="Commands\Updates\UpdateActivity\" />
-    <Folder Include="Commands\Updates\UpdateAction\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\AlessandroGozzi.AppAAC.Domain\AlessandroGozzi.AppAAC.Domain.csproj" />
     <ProjectReference Include="..\AlessandroGozzi.AppAAC.SharedKernel\AlessandroGozzi.AppAAC.SharedKernel.csproj" />
   </ItemGroup>

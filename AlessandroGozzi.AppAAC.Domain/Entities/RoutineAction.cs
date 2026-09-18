@@ -10,12 +10,11 @@ namespace AlessandroGozzi.AppAAC.Domain.Entities
 {
     public class RoutineAction: Entity  
     {
-        public ImageUrl Image { get; init; }
-        public string Description { get; init; }
-        public SpeechText Audio { get; init; }
+        public ImageUrl Image { get; private set; }
+        public string Name { get; private set; }
+        public SpeechText Audio { get; private set; }
         public bool IsFinished { get; private set; } = false;
         public bool IsDeleted { get; private set; } = false; //For soft delete
-        public Guid ActivityId { get; init; } = Guid.Empty;
 
         private RoutineAction() { } // For EF Core
 
@@ -23,7 +22,7 @@ namespace AlessandroGozzi.AppAAC.Domain.Entities
         {
             Image = image;
             Audio = audio;
-            Description = description;
+            Name = description;
         }
         public static Result<RoutineAction> Create(ImageUrl image, SpeechText audio, string description)
         {
@@ -50,6 +49,19 @@ namespace AlessandroGozzi.AppAAC.Domain.Entities
             if (IsDeleted)
                 return Result.Failure(Error.Failure("RoutineAction.AlreadyDeleted", "The routine action is already marked as deleted."));
             IsDeleted = true;
+            return Result.Success();
+        }
+
+        public Result Update(string? name, SpeechText? audio, ImageUrl? image)
+        {
+            if (IsDeleted)
+                return Result.Failure(Error.Failure("RoutineAction.Deleted", "Cannot update a deleted routine action."));
+            if (!string.IsNullOrWhiteSpace(name))
+                Name = name;
+            if (audio != null)
+                Audio = audio;
+            if (image != null)
+                Image = image;
             return Result.Success();
         }
     }
