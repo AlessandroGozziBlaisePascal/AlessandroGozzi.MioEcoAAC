@@ -11,104 +11,108 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
 {
     public class ActivityTests
     {
-        private static SpeechText CreateValidSpeechText() =>
-            SpeechText.Create("Descrizione test").Value;
+        private readonly SpeechText _defaultText;
+        private readonly ImageUrl _defaultImageUrl;
 
-        private static ImageUrl CreateValidImageUrl() =>
-            ImageUrl.Create("example.jpg").Value;
-
-        private static RoutineAction CreateValidAction(Guid ActivityId, string title = "Azione Test") =>
-            RoutineAction.Create(ActivityId, CreateValidImageUrl(), CreateValidSpeechText(), title).Value;
-
-        private static Activity CreateValidActivity(List<RoutineAction>? actions = null)
+        public ActivityTests()
         {
-            var actionList = actions ?? new List<RoutineAction> { CreateValidAction(Guid.NewGuid()), CreateValidAction(Guid.NewGuid(), "Lava denti") };
-            return Activity.Create("Attività Mattina", CreateValidSpeechText(), CreateValidImageUrl(), actionList).Value;
+            _defaultText = SpeechText.Create("Testo di default").Value;
+            _defaultImageUrl = ImageUrl.Create("example.jpg").Value;
+        }
+
+        private RoutineAction CreateFakeAction(string description = "Azione default")
+        {
+            return RoutineAction.Create(
+                _defaultImageUrl,
+                _defaultText,
+                description
+            ).Value;
+        }
+
+        private Activity CreateValidActivity(string name = "Attività Test", List<RoutineAction>? actions = null)
+        {
+            var actionList = actions ?? new List<RoutineAction> { CreateFakeAction() };
+            return Activity.Create(name, _defaultText, _defaultImageUrl, actionList).Value;
         }
 
         [Fact]
-        public void Create_WithValidParameters_ShouldReturnSuccessAndSetProperties()
+        public void Create_WithValidParameters_ShouldReturnSuccess()
         {
-            var name = "Prepararsi";
-            var text = CreateValidSpeechText();
-            var imageUrl = CreateValidImageUrl();
-            var actions = new List<RoutineAction> { CreateValidAction(Guid.NewGuid()) };
+            var action = CreateFakeAction();
+            var actions = new List<RoutineAction> { action };
 
-            var result = Activity.Create(name, text, imageUrl, actions);
+            var result = Activity.Create("Lavarsi i denti", _defaultText, _defaultImageUrl, actions);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeNull();
-            result.Value.Name.Should().Be(name);
-            result.Value.Text.Should().Be(text);
-            result.Value.ImageUrl.Should().Be(imageUrl);
-            result.Value.Actions.Should().HaveCount(1);
+            result.Value.Name.Should().Be("Lavarsi i denti");
+            result.Value.Text.Should().Be(_defaultText);
+            result.Value.ImageUrl.Should().Be(_defaultImageUrl);
             result.Value.IsDeleted.Should().BeFalse();
+            result.Value.Actions.Should().ContainSingle().Which.Should().Be(action);
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void Create_WithInvalidName_ShouldReturnNameRequiredError(string? invalidName)
+        public void Create_WithInvalidName_ShouldReturnValidationError(string? invalidName)
         {
-            var result = Activity.Create(
-                invalidName!,
-                CreateValidSpeechText(),
-                CreateValidImageUrl(),
-                new List<RoutineAction> { CreateValidAction(Guid.NewGuid()) });
+            var actions = new List<RoutineAction> { CreateFakeAction() };
+
+            var result = Activity.Create(invalidName!, _defaultText, _defaultImageUrl, actions);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Activity.NameRequired");
         }
 
         [Fact]
-        public void Create_WithNullText_ShouldReturnTextRequiredError()
+        public void Create_WithNullSpeechText_ShouldReturnValidationError()
         {
-            var result = Activity.Create(
-                "Attività",
-                null!,
-                CreateValidImageUrl(),
-                new List<RoutineAction> { CreateValidAction(Guid.NewGuid()) });
+            var actions = new List<RoutineAction> { CreateFakeAction() };
+
+            var result = Activity.Create("Attività", null!, _defaultImageUrl, actions);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Activity.TextRequired");
         }
 
         [Fact]
-        public void Create_WithNullImageUrl_ShouldReturnImageUrlRequiredError()
+        public void Create_WithNullImageUrl_ShouldReturnValidationError()
         {
-            var result = Activity.Create(
-                "Attività",
-                CreateValidSpeechText(),
-                null!,
-                new List<RoutineAction> { CreateValidAction(Guid.NewGuid()) });
+            var actions = new List<RoutineAction> { CreateFakeAction() };
+
+            var result = Activity.Create("Attività", _defaultText, null!, actions);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Activity.ImageUrlRequired");
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void Create_WithNullOrEmptyActions_ShouldReturnActionsRequiredError(bool isNull)
+        [Fact]
+        public void Create_WithNullActionsList_ShouldReturnValidationError()
         {
-            var actions = isNull ? null : new List<RoutineAction>();
-
-            var result = Activity.Create(
-                "Attività",
-                CreateValidSpeechText(),
-                CreateValidImageUrl(),
-                actions!);
+            var result = Activity.Create("Attività", _defaultText, _defaultImageUrl, null!);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Activity.ActionsRequired");
         }
 
         [Fact]
-        public void AddAction_WithMatchingActivityId_ShouldAddActionToList()
+        public void Create_WithEmptyActionsList_ShouldReturnValidationError()
+        {
+            var emptyActions = new List<RoutineAction>();
+
+            var result = Activity.Create("Attività", _defaultText, _defaultImageUrl, emptyActions);
+
+            result.IsFailure.Should().BeTrue();
+            result.Error.Code.Should().Be("Activity.ActionsRequired");
+        }
+
+        [Fact]
+        public void AddAction_WhenActionIsNew_ShouldAddSuccessfully()
         {
             var activity = CreateValidActivity();
-            var newAction = CreateValidAction(activity.Id, "Seconda Azione");
+            var newAction = CreateFakeAction("Nuova Azione");
 
             var result = activity.AddAction(newAction);
 
@@ -117,42 +121,19 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void AddAction_WhenActionAlreadyExists_ShouldReturnActionAlreadyExistsError()
+        public void AddAction_WhenActionAlreadyExists_ShouldReturnValidationError()
         {
-            var activity = CreateValidActivity();
-            var existingAction = activity.Actions.First();
+            var action = CreateFakeAction();
+            var activity = CreateValidActivity("Attività", new List<RoutineAction> { action });
 
-            var result = activity.AddAction(existingAction);
+            var result = activity.AddAction(action);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Activity.ActionAlreadyExists");
         }
 
         [Fact]
-        public void AddAction_WithMismatchedActivityId_ShouldReturnActionActivityMismatchError()
-        {
-            var activity = CreateValidActivity();
-            var mismatchAction = CreateValidAction(Guid.NewGuid(), "Azione esterna");
-
-            var result = activity.AddAction(mismatchAction);
-
-            result.IsFailure.Should().BeTrue();
-            result.Error.Code.Should().Be("Activity.ActionActivityMismatch");
-        }
-
-        [Fact]
-        public void RemoveAction_WhenActionExists_ShouldCallRemoveOnAction()
-        {
-            var activity = CreateValidActivity();
-            var action = activity.Actions.First();
-
-            var result = activity.RemoveAction(action.Id);
-
-            result.IsSuccess.Should().BeTrue();
-        }
-
-        [Fact]
-        public void RemoveAction_WhenActionNotFound_ShouldReturnActionNotFoundError()
+        public void RemoveAction_WhenActionNotFound_ShouldReturnNotFound()
         {
             var activity = CreateValidActivity();
 
@@ -163,19 +144,7 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void MarkActionAsFinished_WhenActionExists_ShouldMarkActionAsFinished()
-        {
-            var activity = CreateValidActivity();
-            var action = activity.Actions.First();
-
-            var result = activity.MarkActionAsFinished(action.Id);
-
-            result.IsSuccess.Should().BeTrue();
-            action.IsFinished.Should().BeTrue();
-        }
-
-        [Fact]
-        public void MarkActionAsFinished_WhenActionNotFound_ShouldReturnActionNotFoundError()
+        public void MarkActionAsFinished_WhenActionNotFound_ShouldReturnNotFound()
         {
             var activity = CreateValidActivity();
 
@@ -186,24 +155,27 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void IsFinished_WhenAllActionsAreFinished_ShouldBeTrue()
+        public void MarkActivityAsFinished_WhenNotAllActionsAreFinished_ShouldReturnValidationError()
         {
             var activity = CreateValidActivity();
 
-            foreach (var action in activity.Actions)
-            {
-                activity.MarkActionAsFinished(action.Id);
-            }
+            var result = activity.MarkActivityAsFinished();
 
-            activity.IsFinished.Should().BeTrue();
+            result.IsFailure.Should().BeTrue();
+            result.Error.Code.Should().Be("Activity.NotAllActionsFinished");
         }
 
         [Fact]
-        public void IsFinished_WhenSomeActionsAreNotFinished_ShouldBeFalse()
+        public void MarkActivityAsFinished_WhenAlreadyFinished_ShouldReturnValidationError()
         {
-            var activity = CreateValidActivity();
+            var action = CreateFakeAction();
+            action.MarkAsFinished();
+            var activity = CreateValidActivity("Attività", new List<RoutineAction> { action });
 
-            activity.IsFinished.Should().BeFalse();
+            var result = activity.MarkActivityAsFinished();
+
+            result.IsFailure.Should().BeTrue();
+            result.Error.Code.Should().Be("Activity.AlreadyFinished");
         }
 
         [Fact]
@@ -218,7 +190,7 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void SoftDelete_WhenAlreadyDeleted_ShouldReturnAlreadyDeletedError()
+        public void SoftDelete_WhenAlreadyDeleted_ShouldReturnValidationError()
         {
             var activity = CreateValidActivity();
             activity.SoftDelete();
@@ -230,34 +202,101 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void ChangeOrder_WithValidReorderedActions_ShouldUpdateOrder()
+        public void ChangeOrder_WithValidNewOrder_ShouldUpdateActionsOrder()
         {
-            var action1 = CreateValidAction(Guid.NewGuid(), "Azione 1");
-            var action2 = CreateValidAction(Guid.NewGuid(), "Azione 2");
+            var action1 = CreateFakeAction("Azione 1");
+            var action2 = CreateFakeAction("Azione 2");
+            var activity = CreateValidActivity("Attività", new List<RoutineAction> { action1, action2 });
 
-            var activity = Activity.Create("Attività", CreateValidSpeechText(), CreateValidImageUrl(), new List<RoutineAction>
-            {
-                action1,
-                action2
-            }).Value;
+            var newOrder = new List<RoutineAction> { action2, action1 };
 
-            var reordered = new List<RoutineAction> { action2, action1 };
-            var result = activity.ChangeOrder(reordered);
+            var result = activity.ChangeOrder(newOrder);
 
             result.IsSuccess.Should().BeTrue();
-            activity.Actions.Should().ContainInConsecutiveOrder(action2, action1);
+            activity.Actions.Should().ContainInOrder(action2, action1);
         }
 
         [Fact]
-        public void ChangeOrder_WithDifferentElementsOrCount_ShouldReturnInvalidNewOrderError()
+        public void ChangeOrder_WithCountMismatch_ShouldReturnValidationError()
         {
-            var activity = CreateValidActivity();
-            var foreignAction = CreateValidAction(activity.Id, "Sconosciuta");
+            var action1 = CreateFakeAction("Azione 1");
+            var action2 = CreateFakeAction("Azione 2");
+            var activity = CreateValidActivity("Attività", new List<RoutineAction> { action1, action2 });
 
-            var result = activity.ChangeOrder([foreignAction]);
+            var incompleteOrder = new List<RoutineAction> { action1 };
+
+            var result = activity.ChangeOrder(incompleteOrder);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Activity.InvalidNewOrder");
+        }
+
+        [Fact]
+        public void ChangeOrder_WithDifferentActions_ShouldReturnValidationError()
+        {
+            var action1 = CreateFakeAction("Azione 1");
+            var activity = CreateValidActivity("Attività", new List<RoutineAction> { action1 });
+
+            var differentAction = CreateFakeAction("Azione Esterna");
+            var newOrder = new List<RoutineAction> { differentAction };
+
+            var result = activity.ChangeOrder(newOrder);
+
+            result.IsFailure.Should().BeTrue();
+            result.Error.Code.Should().Be("Activity.InvalidNewOrder");
+        }
+
+        [Fact]
+        public void Update_WhenActivityIsDeleted_ShouldReturnValidationError()
+        {
+            var activity = CreateValidActivity();
+            activity.SoftDelete();
+
+            var result = activity.Update("Nuovo Nome", null, null);
+
+            result.IsFailure.Should().BeTrue();
+            result.Error.Code.Should().Be("Activity.Deleted");
+        }
+
+        [Fact]
+        public void Update_WithValidPartialValues_ShouldUpdateFields()
+        {
+            var activity = CreateValidActivity("Vecchio Nome");
+            var newText = SpeechText.Create("Nuovo Testo").Value;
+            var newUrl = ImageUrl.Create("https://example.com/new.png").Value;
+
+            var result = activity.Update("Nuovo Nome", newText, newUrl);
+
+            result.IsSuccess.Should().BeTrue();
+            activity.Name.Should().Be("Nuovo Nome");
+            activity.Text.Should().Be(newText);
+            activity.ImageUrl.Should().Be(newUrl);
+        }
+
+        [Fact]
+        public void Update_WithNullValues_ShouldPreserveExistingFields()
+        {
+            var activity = CreateValidActivity("Nome Originale");
+            var originalText = activity.Text;
+            var originalUrl = activity.ImageUrl;
+
+            var result = activity.Update(null, null, null);
+
+            result.IsSuccess.Should().BeTrue();
+            activity.Name.Should().Be("Nome Originale");
+            activity.Text.Should().Be(originalText);
+            activity.ImageUrl.Should().Be(originalUrl);
+        }
+
+        [Fact]
+        public void UpdateAction_WhenActionNotFound_ShouldReturnNotFound()
+        {
+            var activity = CreateValidActivity();
+
+            var result = activity.UpdateAction(Guid.NewGuid(), "Nome", null, null);
+
+            result.IsFailure.Should().BeTrue();
+            result.Error.Code.Should().Be("Activity.ActionNotFound");
         }
     }
 }

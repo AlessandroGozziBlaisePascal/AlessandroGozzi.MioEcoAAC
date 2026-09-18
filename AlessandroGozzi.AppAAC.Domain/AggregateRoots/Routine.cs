@@ -103,5 +103,32 @@ namespace AlessandroGozzi.AppAAC.Domain.AggregateRoots
 
             return activity.ChangeOrder(newOrder);
         }
+        
+        public Result Update(string? name, SpeechText? text)
+        {
+            if (IsDeleted)
+                return Result.Failure(Error.Failure("Routine.Deleted", "Cannot update a deleted routine."));
+            if (!string.IsNullOrWhiteSpace(name))
+                Name = name;
+            if (text != null && !string.IsNullOrWhiteSpace(text.Text))
+                Text = text;
+            return Result.Success();
+        }
+
+        public Result UpdateActivity(Guid activityId, string? name, SpeechText? text, ImageUrl? imageUrl)
+        {
+            var activity = _activities.FirstOrDefault(a => a.Id == activityId);
+            if (activity == null)
+                return Result.Failure(Error.NotFound("Routine.ActivityNotFound", "The activity was not found in the routine."));
+            return activity.Update(name, text, imageUrl);
+        }
+
+        public Result UpdateActionInActivity(Guid activityId, Guid actionId, string? name, SpeechText? text, ImageUrl? imageUrl)
+        {
+            var activity = _activities.FirstOrDefault(a => a.Id == activityId);
+            if (activity == null)
+                return Result.Failure(Error.NotFound("Routine.ActivityNotFound", "The activity was not found in the routine."));
+            return activity.UpdateAction(actionId, name, text, imageUrl);
+        }
     }
 }

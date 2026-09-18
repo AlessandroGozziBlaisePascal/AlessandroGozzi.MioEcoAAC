@@ -11,94 +11,59 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
 {
     public class RoutineActionTests
     {
-        private static ImageUrl CreateValidImage() =>
-            ImageUrl.Create("https://example.com/action.png").Value;
+        private readonly ImageUrl _defaultImageUrl;
+        private readonly SpeechText _defaultSpeechText;
 
-        private static SpeechText CreateValidAudio() =>
-            SpeechText.Create("Istruzione vocale").Value;
-
-        private static RoutineAction CreateValidRoutineAction(Guid? activityId = null) =>
-            RoutineAction.Create(
-                activityId ?? Guid.NewGuid(),
-                CreateValidImage(),
-                CreateValidAudio(),
-                "Descrizione valida"
-            ).Value;
-
-        [Fact]
-        public void Create_WithValidParameters_ShouldReturnSuccessAndSetProperties()
+        public RoutineActionTests()
         {
-            var activityId = Guid.NewGuid();
-            var image = CreateValidImage();
-            var audio = CreateValidAudio();
-            var description = "Lava le mani";
+            _defaultImageUrl = ImageUrl.Create("image.jpg").Value;
+            _defaultSpeechText = SpeechText.Create("Testo audio azione").Value;
+        }
 
-            var result = RoutineAction.Create(activityId, image, audio, description);
-
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().NotBeNull();
-            result.Value.ActivityId.Should().Be(activityId);
-            result.Value.Image.Should().Be(image);
-            result.Value.Audio.Should().Be(audio);
-            result.Value.Description.Should().Be(description);
-            result.Value.IsFinished.Should().BeFalse();
-            result.Value.IsDeleted.Should().BeFalse();
+        private RoutineAction CreateValidAction(string description = "Lavarsi le mani")
+        {
+            return RoutineAction.Create(_defaultImageUrl, _defaultSpeechText, description).Value;
         }
 
         [Fact]
-        public void Create_WithEmptyActivityId_ShouldReturnInvalidActivityIdError()
+        public void Create_WithValidParameters_ShouldReturnSuccess()
         {
-            var result = RoutineAction.Create(
-                Guid.Empty,
-                CreateValidImage(),
-                CreateValidAudio(),
-                "Descrizione"
-            );
+            var result = RoutineAction.Create(_defaultImageUrl, _defaultSpeechText, "Prendi lo spazzolino");
 
-            result.IsFailure.Should().BeTrue();
-            result.Error.Code.Should().Be("RoutineAction.InvalidActivityId");
+            result.IsSuccess.Should().BeTrue();
+            result.Value.Should().NotBeNull();
+            result.Value.Image.Should().Be(_defaultImageUrl);
+            result.Value.Audio.Should().Be(_defaultSpeechText);
+            result.Value.Name.Should().Be("Prendi lo spazzolino");
+            result.Value.IsFinished.Should().BeFalse();
+            result.Value.IsDeleted.Should().BeFalse();
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void Create_WithInvalidDescription_ShouldReturnInvalidDescriptionError(string? invalidDescription)
+        public void Create_WithInvalidDescription_ShouldReturnValidationError(string? invalidDescription)
         {
-            var result = RoutineAction.Create(
-                Guid.NewGuid(),
-                CreateValidImage(),
-                CreateValidAudio(),
-                invalidDescription!
-            );
+            var result = RoutineAction.Create(_defaultImageUrl, _defaultSpeechText, invalidDescription!);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("RoutineAction.InvalidDescription");
         }
 
         [Fact]
-        public void Create_WithNullImage_ShouldReturnInvalidImageError()
+        public void Create_WithNullImage_ShouldReturnValidationError()
         {
-            var result = RoutineAction.Create(
-                Guid.NewGuid(),
-                null!,
-                CreateValidAudio(),
-                "Descrizione"
-            );
+            var result = RoutineAction.Create(null!, _defaultSpeechText, "Descrizione valida");
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("RoutineAction.InvalidImage");
         }
 
         [Fact]
-        public void Create_WithNullAudio_ShouldReturnInvalidAudioError()
+        public void Create_WithNullAudio_ShouldReturnValidationError()
         {
-            var result = RoutineAction.Create(
-                Guid.NewGuid(),
-                CreateValidImage(),
-                null!,
-                "Descrizione"
-            );
+            var result = RoutineAction.Create(_defaultImageUrl, null!, "Descrizione valida");
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("RoutineAction.InvalidAudio");
@@ -107,7 +72,7 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         [Fact]
         public void MarkAsFinished_WhenNotFinished_ShouldSetIsFinishedToTrue()
         {
-            var action = CreateValidRoutineAction();
+            var action = CreateValidAction();
 
             var result = action.MarkAsFinished();
 
@@ -116,9 +81,9 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void MarkAsFinished_WhenAlreadyFinished_ShouldReturnAlreadyFinishedError()
+        public void MarkAsFinished_WhenAlreadyFinished_ShouldReturnFailure()
         {
-            var action = CreateValidRoutineAction();
+            var action = CreateValidAction();
             action.MarkAsFinished();
 
             var result = action.MarkAsFinished();
@@ -130,7 +95,7 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         [Fact]
         public void Remove_WhenNotDeleted_ShouldSetIsDeletedToTrue()
         {
-            var action = CreateValidRoutineAction();
+            var action = CreateValidAction();
 
             var result = action.Remove();
 
@@ -139,15 +104,57 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void Remove_WhenAlreadyDeleted_ShouldReturnAlreadyDeletedError()
+        public void Remove_WhenAlreadyDeleted_ShouldReturnFailure()
         {
-            var action = CreateValidRoutineAction();
+            var action = CreateValidAction();
             action.Remove();
 
             var result = action.Remove();
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("RoutineAction.AlreadyDeleted");
+        }
+
+        [Fact]
+        public void Update_WhenActionIsDeleted_ShouldReturnFailure()
+        {
+            var action = CreateValidAction();
+            action.Remove();
+
+            var result = action.Update("Nuovo Nome", null, null);
+
+            result.IsFailure.Should().BeTrue();
+            result.Error.Code.Should().Be("RoutineAction.Deleted");
+        }
+
+        [Fact]
+        public void Update_WithValidPartialValues_ShouldUpdateFields()
+        {
+            var action = CreateValidAction("Nome Iniziale");
+            var newAudio = SpeechText.Create("Nuovo audio").Value;
+            var newImage = ImageUrl.Create("https://example.com/new.png").Value;
+
+            var result = action.Update("Nome Modificato", newAudio, newImage);
+
+            result.IsSuccess.Should().BeTrue();
+            action.Name.Should().Be("Nome Modificato");
+            action.Audio.Should().Be(newAudio);
+            action.Image.Should().Be(newImage);
+        }
+
+        [Fact]
+        public void Update_WithNullValues_ShouldPreserveExistingFields()
+        {
+            var action = CreateValidAction("Nome Iniziale");
+            var originalAudio = action.Audio;
+            var originalImage = action.Image;
+
+            var result = action.Update(null, null, null);
+
+            result.IsSuccess.Should().BeTrue();
+            action.Name.Should().Be("Nome Iniziale");
+            action.Audio.Should().Be(originalAudio);
+            action.Image.Should().Be(originalImage);
         }
     }
 }

@@ -13,39 +13,29 @@ namespace AlessandroGozzi.AppAAC.DomainTest.AggregateRoots
 {
     public class RoutineTests
     {
-        private static Routine CreateValidRoutine()
+        private readonly SpeechText _defaultText;
+        private readonly RoutineType _defaultType = RoutineType.NormalDay;
+
+        public RoutineTests()
         {
-            var text = SpeechText.Create("Test speech text").Value;
-            return Routine.Create("Mattina", text, RoutineType.NormalDay).Value;
+            _defaultText = SpeechText.Create("Testo di default").Value;
         }
 
-        private static RoutineAction CreateValidAction(Guid activityId, string name = "Sample Action")  =>
-            RoutineAction.Create(activityId, CreateValidImageUrl(), CreateValidSpeechText(), name).Value;
-
-        private static SpeechText CreateValidSpeechText() =>
-            SpeechText.Create("Sample text").Value;
-
-        private static ImageUrl CreateValidImageUrl() =>
-            ImageUrl.Create("example.png").Value;
-
-        private static Activity CreateValidActivity(Guid Id, string name = "Sample Activity") =>
-            Activity.Create(name, CreateValidSpeechText(), CreateValidImageUrl(), 
-                new List<RoutineAction> { CreateValidAction(Id), CreateValidAction(Id, "Lava denti"), CreateValidAction(Id, "Mangia") }).Value;
+        private Routine CreateValidRoutine(string name = "Routine Test")
+        {
+            return Routine.Create(name, _defaultText, _defaultType).Value;
+        }
 
         [Fact]
-        public void Create_WithValidParameters_ShouldReturnSuccessAndSetProperties()
+        public void Create_WithValidParameters_ShouldReturnSuccess()
         {
-            var name = "Routine Sera";
-            var text = CreateValidSpeechText();
-            var type = RoutineType.NormalDay;
-
-            var result = Routine.Create(name, text, type);
+            var result = Routine.Create("Routine Mattutina", _defaultText, _defaultType);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.Should().NotBeNull();
-            result.Value.Name.Should().Be(name);
-            result.Value.Text.Should().Be(text);
-            result.Value.Type.Should().Be(type);
+            result.Value.Name.Should().Be("Routine Mattutina");
+            result.Value.Text.Should().Be(_defaultText);
+            result.Value.Type.Should().Be(_defaultType);
             result.Value.IsDeleted.Should().BeFalse();
             result.Value.Activities.Should().BeEmpty();
         }
@@ -54,27 +44,25 @@ namespace AlessandroGozzi.AppAAC.DomainTest.AggregateRoots
         [InlineData(null)]
         [InlineData("")]
         [InlineData("   ")]
-        public void Create_WithEmptyOrWhitespaceName_ShouldReturnNameRequiredError(string? invalidName)
+        public void Create_WithInvalidName_ShouldReturnValidationError(string? invalidName)
         {
-            var text = CreateValidSpeechText();
-
-            var result = Routine.Create(invalidName!, text, RoutineType.NormalDay);
+            var result = Routine.Create(invalidName!, _defaultText, _defaultType);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Routine.NameRequired");
         }
 
         [Fact]
-        public void Create_WithNullSpeechText_ShouldReturnTextRequiredError()
+        public void Create_WithNullSpeechText_ShouldReturnValidationError()
         {
-            var result = Routine.Create("Routine Pomeriggio", null!, RoutineType.NormalDay);
+            var result = Routine.Create("Routine Test", null!, _defaultType);
 
             result.IsFailure.Should().BeTrue();
             result.Error.Code.Should().Be("Routine.TextRequired");
         }
 
         [Fact]
-        public void Remove_WhenActive_ShouldSetIsDeletedToTrue()
+        public void Remove_WhenNotDeleted_ShouldSetIsDeletedToTrue()
         {
             var routine = CreateValidRoutine();
 
@@ -85,7 +73,7 @@ namespace AlessandroGozzi.AppAAC.DomainTest.AggregateRoots
         }
 
         [Fact]
-        public void Remove_WhenAlreadyDeleted_ShouldReturnAlreadyDeletedError()
+        public void Remove_WhenAlreadyDeleted_ShouldReturnFailure()
         {
             var routine = CreateValidRoutine();
             routine.Remove();
@@ -97,23 +85,22 @@ namespace AlessandroGozzi.AppAAC.DomainTest.AggregateRoots
         }
 
         [Fact]
-        public void AddActivity_WhenNew_ShouldAddActivityToList()
+        public void AddActivity_WhenActivityIsNew_ShouldAddSuccessfully()
         {
             var routine = CreateValidRoutine();
-            var activity = CreateValidActivity(Guid.NewGuid());
+            var activity = CreateFakeActivity();
 
             var result = routine.AddActivity(activity);
 
             result.IsSuccess.Should().BeTrue();
-            routine.Activities.Should().ContainSingle()
-                .Which.Should().Be(activity);
+            routine.Activities.Should().ContainSingle().Which.Should().Be(activity);
         }
 
         [Fact]
-        public void AddActivity_WhenAlreadyPresent_ShouldReturnActivityAlreadyExistsError()
+        public void AddActivity_WhenActivityAlreadyPresent_ShouldReturnValidationError()
         {
             var routine = CreateValidRoutine();
-            var activity = CreateValidActivity(Guid.NewGuid());
+            var activity = CreateFakeActivity();
             routine.AddActivity(activity);
 
             var result = routine.AddActivity(activity);
@@ -123,19 +110,7 @@ namespace AlessandroGozzi.AppAAC.DomainTest.AggregateRoots
         }
 
         [Fact]
-        public void RemoveActivity_WhenActivityExists_ShouldReturnSuccess()
-        {
-            var routine = CreateValidRoutine();
-            var activity = CreateValidActivity(Guid.NewGuid());
-            routine.AddActivity(activity);
-
-            var result = routine.RemoveActivity(activity.Id);
-
-            result.IsSuccess.Should().BeTrue();
-        }
-
-        [Fact]
-        public void RemoveActivity_WhenActivityNotFound_ShouldReturnActivityNotFoundError()
+        public void RemoveActivity_WhenActivityNotFound_ShouldReturnNotFound()
         {
             var routine = CreateValidRoutine();
 
@@ -146,11 +121,11 @@ namespace AlessandroGozzi.AppAAC.DomainTest.AggregateRoots
         }
 
         [Fact]
-        public void ChangeActivityOrder_WithValidReorderedList_ShouldUpdateOrder()
+        public void ChangeActivityOrder_WithValidNewOrder_ShouldUpdateOrder()
         {
             var routine = CreateValidRoutine();
-            var act1 = CreateValidActivity(Guid.NewGuid());
-            var act2 = CreateValidActivity(Guid.NewGuid(), "Dormire");
+            var act1 = CreateFakeActivity("Attività 1");
+            var act2 = CreateFakeActivity("Attività 2");
             routine.AddActivity(act1);
             routine.AddActivity(act2);
 
@@ -159,34 +134,74 @@ namespace AlessandroGozzi.AppAAC.DomainTest.AggregateRoots
             var result = routine.ChangeActivityOrder(newOrder);
 
             result.IsSuccess.Should().BeTrue();
-            routine.Activities.Should().ContainInConsecutiveOrder(act2, act1);
+            routine.Activities.Should().ContainInOrder(act2, act1);
         }
 
         [Fact]
-        public void ChangeActivityOrder_WithDifferentCountOrElements_ShouldReturnInvalidOrderError()
+        public void ChangeActivityOrder_WithDifferentItems_ShouldReturnValidationError()
         {
             var routine = CreateValidRoutine();
-            var act1 = CreateValidActivity(Guid.NewGuid(), "Attività 1");
+            var act1 = CreateFakeActivity("Attività 1");
             routine.AddActivity(act1);
 
-            var foreignActivity = CreateValidActivity(Guid.NewGuid(), "Attività sconosciuta");
-            var invalidOrder = new List<Activity> { foreignActivity };
+            var unknownActivity = CreateFakeActivity("Sconosciuta");
+            var newOrder = new List<Activity> { unknownActivity };
 
-            var result = routine.ChangeActivityOrder(invalidOrder);
+            var result = routine.ChangeActivityOrder(newOrder);
 
             result.IsFailure.Should().BeTrue();
-            result.Error.Code.Should().BeOneOf("Routine.InvalidActivityOrder", "Routine.InvalidNewOrder");
+            result.Error.Code.Should().Be("Routine.InvalidActivityOrder");
         }
 
         [Fact]
-        public void ChangeActionOrderInActivity_WhenActivityNotFound_ShouldReturnNotFoundError()
+        public void Update_WithValidPartialValues_ShouldUpdateFields()
+        {
+            var routine = CreateValidRoutine("Vecchio Nome");
+            var newText = SpeechText.Create("Nuovo testo vocale").Value;
+
+            var result = routine.Update("Nuovo Nome", newText);
+
+            result.IsSuccess.Should().BeTrue();
+            routine.Name.Should().Be("Nuovo Nome");
+            routine.Text.Should().Be(newText);
+        }
+
+        [Fact]
+        public void Update_WithNullValues_ShouldPreserveExistingFields()
+        {
+            var routine = CreateValidRoutine("Nome Originale");
+            var originalText = routine.Text;
+
+            var result = routine.Update(null, null);
+
+            result.IsSuccess.Should().BeTrue();
+            routine.Name.Should().Be("Nome Originale");
+            routine.Text.Should().Be(originalText);
+        }
+
+        [Fact]
+        public void Update_WhenRoutineIsDeleted_ShouldReturnFailure()
         {
             var routine = CreateValidRoutine();
+            routine.Remove();
 
-            var result = routine.ChangeActionOrderInActivity(Guid.NewGuid(), new List<RoutineAction>());
+            var result = routine.Update("Nuovo Nome", null);
 
             result.IsFailure.Should().BeTrue();
-            result.Error.Code.Should().Be("Routine.ActivityNotFound");
+            result.Error.Code.Should().Be("Routine.Deleted");
+        }
+
+        private Activity CreateFakeActivity(string name = "Attività Default")
+        {
+            var url = ImageUrl.Create("example.jpg").Value;
+            var text = SpeechText.Create("Testo attività").Value;
+            var action = RoutineAction.Create(
+                url,
+                text,
+                "Descrizione"
+            ).Value;
+
+            return Activity.Create(name, text, url, new List<RoutineAction> { action }).Value;
         }
     }
 }

@@ -46,8 +46,6 @@ namespace AlessandroGozzi.AppAAC.Domain.Entities
         {
             if (_actions.Any(a => a.Id == action.Id))
                 return Result.Failure(Error.Validation("Activity.ActionAlreadyExists", "The routine action already exists in the activity."));
-            if(action.ActivityId != Id)
-                return Result.Failure(Error.Validation("Activity.ActionActivityMismatch", "The routine action does not belong to this activity."));
             _actions.Add(action);
             return Result.Success();
         }
@@ -90,6 +88,27 @@ namespace AlessandroGozzi.AppAAC.Domain.Entities
             _actions.AddRange(newOrder);
 
             return Result.Success();
+        }
+
+        public Result Update(string? name, SpeechText? text, ImageUrl? imageUrl)
+        {
+            if (IsDeleted)
+                return Result.Failure(Error.Validation("Activity.Deleted", "Cannot update a deleted activity."));
+            if (!string.IsNullOrWhiteSpace(name))
+                Name = name;
+            if (text != null)
+                Text = text;
+            if (imageUrl != null)
+                ImageUrl = imageUrl;
+            return Result.Success();
+        }
+
+        public Result UpdateAction(Guid actionId, string? name, SpeechText? text, ImageUrl? imageUrl)
+        {
+            var action = _actions.FirstOrDefault(a => a.Id == actionId);
+            if (action == null)
+                return Result.Failure(Error.NotFound("Activity.ActionNotFound", "The routine action was not found in the activity."));
+            return action.Update(name, text, imageUrl);
         }
     }
 }
