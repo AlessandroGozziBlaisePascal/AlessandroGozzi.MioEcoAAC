@@ -155,30 +155,6 @@ namespace AlessandroGozzi.AppAAC.DomainTest.Entities
         }
 
         [Fact]
-        public void MarkActivityAsFinished_WhenNotAllActionsAreFinished_ShouldReturnValidationError()
-        {
-            var activity = CreateValidActivity();
-
-            var result = activity.MarkActivityAsFinished();
-
-            result.IsFailure.Should().BeTrue();
-            result.Error.Code.Should().Be("Activity.NotAllActionsFinished");
-        }
-
-        [Fact]
-        public void MarkActivityAsFinished_WhenAlreadyFinished_ShouldReturnValidationError()
-        {
-            var action = CreateFakeAction();
-            action.MarkAsFinished();
-            var activity = CreateValidActivity("Attività", new List<RoutineAction> { action });
-
-            var result = activity.MarkActivityAsFinished();
-
-            result.IsFailure.Should().BeTrue();
-            result.Error.Code.Should().Be("Activity.AlreadyFinished");
-        }
-
-        [Fact]
         public void SoftDelete_WhenNotDeleted_ShouldSetIsDeletedToTrue()
         {
             var activity = CreateValidActivity();

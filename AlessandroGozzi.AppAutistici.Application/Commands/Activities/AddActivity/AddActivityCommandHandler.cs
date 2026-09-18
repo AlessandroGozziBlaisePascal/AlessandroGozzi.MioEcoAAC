@@ -59,7 +59,6 @@ namespace AlessandroGozzi.AppAAC.Application.Commands.Activities.AddActivity
                 }
 
                 var actionResult = RoutineAction.Create(
-                    actionDto.ActivityId,
                     actionImageResult.Value,
                     actionAudioResult.Value,
                     actionDto.Name

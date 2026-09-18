@@ -43,7 +43,7 @@ namespace AlessandroGozzi.AppAAC.Application.Commands.Actions.AddAction
                 return Result.Failure(speechTextResult.Error);
             }
 
-            var actionResult = RoutineAction.Create(request.ActivityId, imUrlResult.Value, speechTextResult.Value, request.Name);
+            var actionResult = RoutineAction.Create(imUrlResult.Value, speechTextResult.Value, request.Name);
             if(actionResult.IsFailure)
             {
                 return Result.Failure(actionResult.Error);

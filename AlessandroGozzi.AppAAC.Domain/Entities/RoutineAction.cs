@@ -18,24 +18,21 @@ namespace AlessandroGozzi.AppAAC.Domain.Entities
 
         private RoutineAction() { } // For EF Core
 
-        private RoutineAction(Guid activityId, ImageUrl image, SpeechText audio, string description)
+        private RoutineAction(ImageUrl image, SpeechText audio, string description)
         {
-            ActivityId = activityId;
             Image = image;
             Audio = audio;
             Name = description;
         }
-        public static Result<RoutineAction> Create(Guid activityId, ImageUrl image, SpeechText audio, string description)
+        public static Result<RoutineAction> Create(ImageUrl image, SpeechText audio, string description)
         {
-            if (activityId == Guid.Empty)
-                return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidActivityId", "The activity ID cannot be empty."));
             if (string.IsNullOrWhiteSpace(description))
                 return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidDescription", "The description cannot be null or empty."));
             if(image == null)
                 return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidImage", "The image cannot be null."));
             if(audio == null)
                 return Result.Failure<RoutineAction>(Error.Validation("RoutineAction.InvalidAudio", "The audio cannot be null."));
-            var routineAction = new RoutineAction(activityId, image, audio, description);
+            var routineAction = new RoutineAction(image, audio, description);
             return Result.Success(routineAction);
         }
 
