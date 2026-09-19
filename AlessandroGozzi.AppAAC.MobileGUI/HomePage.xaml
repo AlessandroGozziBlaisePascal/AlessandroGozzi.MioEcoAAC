@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
+             xmlns:dtos="clr-namespace:AlessandroGozzi.AppAAC.Application.Dtos;assembly=AlessandroGozzi.AppAAC.Application"
+             x:Class="AlessandroGozzi.AppAAC.MobileGUI.HomePage"
+             x:DataType="vm:HomeViewModel"
+             x:Name="RootPage"
+             Title="Seleziona Routine"
+             BackgroundColor="#F8FAFC">
+
+    <Grid RowDefinitions="Auto, *">
+
+        <!-- Header -->
+        <Border Grid.Row="0"
+                BackgroundColor="#1E40AF"
+                StrokeShape="RoundRectangle 0,0,16,16"
+                Padding="20,16"
+                Margin="0,0,0,8">
+            <Label Text="Scegli una Routine"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+        </Border>
+
+        <!-- Lista Routine -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Routines}"
+                        Margin="16">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2"
+                                 HorizontalItemSpacing="12"
+                                 VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="dtos:RoutineSummaryDto">
+                    <Border StrokeShape="RoundRectangle 16"
+                            Stroke="#CBD5E1"
+                            StrokeThickness="2"
+                            BackgroundColor="White"
+                            Padding="16">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer 
+                                Command="{Binding Source={x:Reference RootPage}, Path=BindingContext.SelectRoutineCommand}"
+                                CommandParameter="{Binding .}" />       
+                        </Border.GestureRecognizers>
+
+                        <VerticalStackLayout Spacing="8" 
+                                             HorizontalOptions="Center" 
+                                             VerticalOptions="Center">
+                            <Label Text="{Binding Name}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E3A8A"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="{Binding Text}"
+                                   FontSize="14"
+                                   TextColor="#64748B"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <Label Text="Nessuna routine trovata nel database."
+                       FontSize="16"
+                       TextColor="#64748B"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+    </Grid>
+</ContentPage>

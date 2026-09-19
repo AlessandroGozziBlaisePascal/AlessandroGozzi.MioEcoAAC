@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace AlessandroGozzi.AppAAC.Application.Dtos
 {
-    public record RoutineDto(Guid Id, string Image, string Name, List<ActivityDto> Actions, bool IsFinished, string SpeechText);
+    public record RoutineDto(Guid Id, string Image, string Name, List<ActivityDto> Activities, bool IsFinished, string SpeechText);
 }

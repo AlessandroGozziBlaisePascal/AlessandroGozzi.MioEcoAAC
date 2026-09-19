@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppAAC.Doma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppAAC.Infrastructure", "AlessandroGozzi.AppAAC.Infrastructure\AlessandroGozzi.AppAAC.Infrastructure.csproj", "{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppAAC.MobileGUI", "AlessandroGozzi.AppAAC.MobileGUI\AlessandroGozzi.AppAAC.MobileGUI.csproj", "{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +61,7 @@ Global
 		{6DCC43E0-C4EB-2EBC-6B1E-CDD8AE540369} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
 		{8DD303C8-32A4-4AE1-8B94-BD9272AA3688} = {A1A76CFE-C84A-4E95-9A62-AF08C5D4D3DC}
 		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
+		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E61840C5-5EB1-4817-88A4-1766906A1001}
