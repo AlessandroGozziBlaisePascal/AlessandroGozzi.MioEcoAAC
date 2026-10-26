@@ -7,64 +7,94 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AlessandroGozzi.AppAAC.Application.Dtos;
-using AlessandroGozzi.AppAAC.Application.Queries.GetAllRoutines;
-using AlessandroGozzi.AppAAC.Application.Queries.GetRoutine;
-using AlessandroGozzi.AppAAC.Domain.AggregateRoots;
-using MediatR;
+using AlessandroGozzi.AppAAC.Domain.Models;
+using AlessandroGozzi.AppAAC.Domain.Repositories;
+using AlessandroGozzi.AppAAC.MobileGUI.Pages;
+using AlessandroGozzi.AppAAC.MobileGUI.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Controls;
 
 namespace AlessandroGozzi.AppAAC.MobileGUI.ViewModels
 {
-    public class HomeViewModel : INotifyPropertyChanged
+    public partial class HomeViewModel : ObservableObject
     {
-        private readonly ISender _sender;
+        private readonly IRoutineRepository _routineRepository;
+        private readonly ITextToSpeechService _ttsService;
+
+        private ObservableCollection<Routine> _routines = new();
+        public ObservableCollection<Routine> Routines
+        {
+            get => _routines;
+            set => SetProperty(ref _routines, value);
+        }
+
+        private Routine? _selectedRoutine;
+        public Routine? SelectedRoutine
+        {
+            get => _selectedRoutine;
+            set
+            {
+                if (SetProperty(ref _selectedRoutine, value) && value != null)
+                {
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await _ttsService.SpeakItalianAsync(value.Name);
+                        }
+                        catch
+                        {
+                            // Fallback per TextToSpeech
+                        }
+                    });
+                }
+            }
+        }
 
         private bool _isLoading;
-        private string _errorMessage = string.Empty;
-
-        public ObservableCollection<RoutineSummaryDto> Routines { get; } = new();
-
         public bool IsLoading
         {
             get => _isLoading;
             set => SetProperty(ref _isLoading, value);
         }
 
+        private string _errorMessage = string.Empty;
         public string ErrorMessage
         {
             get => _errorMessage;
             set => SetProperty(ref _errorMessage, value);
         }
 
-        public ICommand SelectRoutineCommand { get; }
-
-        public HomeViewModel(ISender sender)
+        public HomeViewModel(IRoutineRepository routineRepository, ITextToSpeechService service)
         {
-            _sender = sender;
-            SelectRoutineCommand = new Command<RoutineSummaryDto>(async routine => await OnRoutineSelectedAsync(routine));
+            _routineRepository = routineRepository;
+            _ttsService = service;
         }
 
+        [RelayCommand]
+        public void SelectRoutine(Routine? routine)
+        {
+            if (routine is null) return;
+            SelectedRoutine = routine;
+        }
+
+        [RelayCommand]
         public async Task LoadRoutinesAsync()
         {
-            if (IsLoading) return;
-            IsLoading = true;
-            ErrorMessage = string.Empty;
+            if (_isLoading) return;
 
             try
             {
-                var result = await _sender.Send(new GetAllRoutinesQuery());
+                IsLoading = true;
+                ErrorMessage = string.Empty;
 
-                if (result.IsFailure)
-                {
-                    ErrorMessage = result.Error.Description;
-                    Routines.Clear();
-                    return;
-                }
+                var items = await _routineRepository.GetAllAvailableAsync();
 
-                Routines.Clear();
-                foreach (var routine in result.Value)
+                _routines.Clear();
+                foreach (var item in items)
                 {
-                    Routines.Add(routine);
+                    _routines.Add(item);
                 }
             }
             catch (Exception ex)
@@ -77,28 +107,30 @@ namespace AlessandroGozzi.AppAAC.MobileGUI.ViewModels
             }
         }
 
-        private async Task OnRoutineSelectedAsync(RoutineSummaryDto? routine)
+        [RelayCommand]
+        public async Task LoadRoutineActionsAsync()
         {
-            if (routine is null) return;
+            if (_selectedRoutine == null) return;
 
             try
             {
-                await TextToSpeech.Default.SpeakAsync(routine.Name);
-            }
-            catch
-            {
-            }
-        }
+                IsLoading = true;
+                ErrorMessage = string.Empty;
 
-        #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string? propertyName = null)
+                await Shell.Current.GoToAsync(nameof(ActivityPage), new Dictionary<string, object>
         {
-            if (EqualityComparer<T>.Default.Equals(storage, value)) return false;
-            storage = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            return true;
+            { "RoutineId", _selectedRoutine.Id.ToString() },
+            { "RoutineTitle", _selectedRoutine.Name }
+        });
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Errore nel caricamento delle attività: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
-        #endregion
     }
 }

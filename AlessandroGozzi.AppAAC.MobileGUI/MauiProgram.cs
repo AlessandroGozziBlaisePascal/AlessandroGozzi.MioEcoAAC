@@ -1,5 +1,7 @@
-﻿using AlessandroGozzi.AppAAC.Application.Queries.GetRoutine;
+﻿using AlessandroGozzi.AppAAC.Domain.Repositories;
 using AlessandroGozzi.AppAAC.Infrastructure;
+using AlessandroGozzi.AppAAC.MobileGUI.Pages;
+using AlessandroGozzi.AppAAC.MobileGUI.Services;
 using AlessandroGozzi.AppAAC.MobileGUI.ViewModels;
 using Microsoft.Extensions.Logging;
 using Plugin.Maui.Audio;
@@ -19,20 +21,32 @@ namespace AlessandroGozzi.AppAAC.MobileGUI
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-#if DEBUG
-            builder.Logging.AddDebug();
-#endif
+            // 1.Percorso locale del DB su cartella isolata dell'app
+            string dbPath = Path.Combine(FileSystem.AppDataDirectory, DatabaseConstants.DatabaseFilename);
 
-            builder.Services.AddInfrastructure();
-
+            // 2. Registrazione DB Context, Repository e Servizi Esterni
+            builder.Services.AddSingleton(sp => new AppDbContext(dbPath));
+            builder.Services.AddSingleton<IRoutineRepository>(sp => new RoutineRepository(dbPath));
             builder.Services.AddSingleton(AudioManager.Current);
-            builder.Services.AddTransient<IntroPage>();
-            builder.Services.AddTransient<HomePage>();
+            builder.Services.AddSingleton<ITextToSpeechService, TextToSpeechService>();
+
+            // 3. ViewModels
             builder.Services.AddTransient<HomeViewModel>();
-            builder.Services.AddMediatR(cfg => 
-                cfg.RegisterServicesFromAssembly(typeof(AlessandroGozzi.AppAAC.Application.Queries.GetAllRoutines.GetAllRoutinesQuery).Assembly));
+            builder.Services.AddTransient<ActivityViewModel>();
+
+            // 4. Pagine
+            builder.Services.AddTransient<HomePage>();
+            builder.Services.AddTransient<ActivityPage>();
+            builder.Services.AddTransient<IntroPage>();
 
             var app = builder.Build();
+
+            // 5. Inizializzazione e Seeding del DB tramite AppDbContext prima dell'avvio della UI
+            Task.Run(async () =>
+            {
+                var dbContext = app.Services.GetRequiredService<AppDbContext>();
+                await dbContext.InitializeAsync();
+            }).GetAwaiter().GetResult();
 
             return app;
         }

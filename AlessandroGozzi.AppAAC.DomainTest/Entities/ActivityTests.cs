@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppAAC.Domain.Entities;
+using AlessandroGozzi.AppAAC.Domain.Models;
 using AlessandroGozzi.AppAAC.Domain.ValueObjects;
 using FluentAssertions;
 

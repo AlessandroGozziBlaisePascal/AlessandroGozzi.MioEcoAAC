@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android</TargetFrameworks>
@@ -68,24 +68,25 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\AlessandroGozzi.AppAAC.Domain\AlessandroGozzi.AppAAC.Domain.csproj" />
 	  <ProjectReference Include="..\AlessandroGozzi.AppAAC.Infrastructure\AlessandroGozzi.AppAAC.Infrastructure.csproj" />
-	  <ProjectReference Include="..\AlessandroGozzi.AppAAC.SharedKernel\AlessandroGozzi.AppAAC.SharedKernel.csproj" />
-	  <ProjectReference Include="..\AlessandroGozzi.AppAutistici.Application\AlessandroGozzi.AppAAC.Application.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="IntroPage.xaml.cs">
+	  <Compile Update="Pages\IntroPage.xaml.cs">
 	    <DependentUpon>IntroPage.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="HomePage.xaml.cs">
+	  <Compile Update="Pages\HomePage.xaml.cs">
 	    <DependentUpon>HomePage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="IntroPage.xaml">
+	  <MauiXaml Update="Pages\ActivityPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="HomePage.xaml">
+	  <MauiXaml Update="Pages\IntroPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\HomePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>

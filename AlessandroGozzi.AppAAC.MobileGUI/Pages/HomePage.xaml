@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
+             xmlns:models="clr-namespace:AlessandroGozzi.AppAAC.Domain.Models;assembly=AlessandroGozzi.AppAAC.Domain"
+             x:Class="AlessandroGozzi.AppAAC.MobileGUI.HomePage"
+             x:DataType="vm:HomeViewModel"
+             x:Name="RootPage"
+             Title="Seleziona Routine"
+             BackgroundColor="#F8FAFC">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <!-- 1. Lista Routine con Selezione -->
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Routines}"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedRoutine, Mode=TwoWay}"
+                        Margin="16">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2"
+                                 HorizontalItemSpacing="12"
+                                 VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Routine">
+                    <Border x:Name="RoutineCard"
+                            StrokeShape="RoundRectangle 16"
+                            Stroke="#CBD5E1"
+                            StrokeThickness="2"
+                            BackgroundColor="White"
+                            Padding="16">
+
+                        <!-- Feedback visivo quando la card è selezionata -->
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal" />
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="#1E40AF" />
+                                        <Setter Property="StrokeThickness" Value="3" />
+                                        <Setter Property="BackgroundColor" Value="#EFF6FF" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <VerticalStackLayout Spacing="8"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center">
+                            <Label Text="{Binding Name}"
+                                   FontSize="20"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E3A8A"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="{Binding SpeechText}"
+                                   FontSize="14"
+                                   TextColor="#64748B"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+            <CollectionView.EmptyView>
+                <Label Text="Nessuna routine trovata nel database."
+                       FontSize="16"
+                       TextColor="#64748B"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <!-- Indicatore di caricamento -->
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           Color="#1E40AF"
+                           WidthRequest="48"
+                           HeightRequest="48"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+
+        <!-- 2. Barra inferiore con Bottone di Conferma -->
+        <Border Grid.Row="1"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 16,16,0,0"
+                Padding="16"
+                Stroke="#E2E8F0">
+            <Button Text="Seleziona Routine"
+                    Command="{Binding LoadRoutineActionsCommand}"
+                    BackgroundColor="#1E40AF"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="52" />
+        </Border>
+
+    </Grid>
+</ContentPage>

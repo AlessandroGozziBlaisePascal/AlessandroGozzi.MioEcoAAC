@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AlessandroGozzi.AppAAC.Domain.AggregateRoots;
-using AlessandroGozzi.AppAAC.Domain.Entities;
 using AlessandroGozzi.AppAAC.Domain.Enums;
+using AlessandroGozzi.AppAAC.Domain.Models;
 using AlessandroGozzi.AppAAC.Domain.ValueObjects;
 using FluentAssertions;
 

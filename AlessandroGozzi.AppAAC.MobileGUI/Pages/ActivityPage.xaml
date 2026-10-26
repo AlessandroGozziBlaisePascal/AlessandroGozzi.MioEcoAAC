@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:AlessandroGozzi.AppAAC.Domain.Models;assembly=AlessandroGozzi.AppAAC.Domain"
+             xmlns:viewmodels="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
+             x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.ActivityPage"
+             x:DataType="viewmodels:ActivityViewModel"
+             Shell.BackButtonBehavior="{BackButtonBehavior IsVisible=False}">
+
+    <!-- Barra superiore personalizzata con la sola freccia per tornare indietro e il titolo -->
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="Auto, *" VerticalOptions="Center" ColumnSpacing="12">
+            <ImageButton Grid.Column="0"
+                         Command="{Binding TornaIndietroCommand}"
+                         BackgroundColor="Transparent"
+                         HeightRequest="36"
+                         WidthRequest="36"
+                         Padding="4"
+                         Aspect="AspectFit">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#x2190;"
+                                     FontFamily="OpenSansSemibold"
+                                     Color="Black"
+                                     Size="24" />
+                </ImageButton.Source>
+            </ImageButton>
+
+            <Label Grid.Column="1"
+                   Text="{Binding RoutineTitle}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="Black"
+                   VerticalTextAlignment="Center" />
+        </Grid>
+    </Shell.TitleView>
+
+    <!-- Contenuto con griglia e unico bottone inferiore di conferma -->
+    <Grid RowDefinitions="*, Auto" Padding="16" RowSpacing="16">
+
+        <!-- Selezione Attività -->
+        <CollectionView Grid.Row="0"
+                        ItemsSource="{Binding Activities}"
+                        SelectedItem="{Binding SelectedActivity, Mode=TwoWay}"
+                        SelectionMode="Single">
+
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="12" VerticalItemSpacing="12"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Activity">
+                    <Border Stroke="#B0C4DE"
+                            StrokeThickness="2"
+                            StrokeShape="RoundRectangle 16"
+                            BackgroundColor="White"
+                            Padding="12">
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup Name="CommonStates">
+                                <VisualState Name="Normal">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="#B0C4DE" />
+                                        <Setter Property="StrokeThickness" Value="2" />
+                                        <Setter Property="BackgroundColor" Value="White" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Property="Stroke" Value="#1A43BF" />
+                                        <Setter Property="StrokeThickness" Value="3" />
+                                        <Setter Property="BackgroundColor" Value="#EEF3FF" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Image Source="{Binding ImageUrl}"
+                                   WidthRequest="90"
+                                   HeightRequest="90"
+                                   Aspect="AspectFit" />
+                            <Label Text="{Binding Name}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#0A2540"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Unico pulsante di conferma attività in basso -->
+        <Button Grid.Row="1"
+                Text="Seleziona Attività"
+                Command="{Binding ConfermaAttivitaCommand}"
+                BackgroundColor="#1A43BF"
+                TextColor="White"
+                FontAttributes="Bold"
+                FontSize="16"
+                CornerRadius="12"
+                HeightRequest="52" />
+    </Grid>
+</ContentPage>

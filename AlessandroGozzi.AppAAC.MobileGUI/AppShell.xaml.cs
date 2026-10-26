@@ -1,4 +1,6 @@
-﻿namespace AlessandroGozzi.AppAAC.MobileGUI
+﻿using AlessandroGozzi.AppAAC.MobileGUI.Pages;
+
+namespace AlessandroGozzi.AppAAC.MobileGUI
 {
     public partial class AppShell : Shell
     {
@@ -6,7 +8,7 @@
         {
             InitializeComponent();
 
-            Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
+            Routing.RegisterRoute(nameof(ActivityPage), typeof(ActivityPage));
         }
     }
 }
