@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
+             x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.CongratulationsPage"
+             x:DataType="viewmodels:CongratulationsViewModel"
+             Shell.BackButtonBehavior="{BackButtonBehavior IsVisible=False}"
+             BackgroundColor="#F8FAFC">
+
+    <!-- Il tocco in qualunque punto della Grid attiva il comando di ritorno -->
+    <Grid RowDefinitions="*, Auto" Padding="24">
+        <Grid.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding ChiudiSchermataCommand}" />
+        </Grid.GestureRecognizers>
+
+        <VerticalStackLayout Grid.Row="0"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="20">
+
+            <Label Text="COMPLIMENTI!"
+                   FontSize="36"
+                   FontAttributes="Bold"
+                   TextColor="#16A34A"
+                   HorizontalTextAlignment="Center" />
+
+            <Label Text="Hai finito l'attività!"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#0A2540"
+                   HorizontalTextAlignment="Center" />
+
+            <Border StrokeThickness="0"
+                    StrokeShape="RoundRectangle 24"
+                    BackgroundColor="White"
+                    Padding="16"
+                    MaximumWidthRequest="320"
+                    HorizontalOptions="Center">
+
+                <Image Source="complimenti_pagina.jpg"
+                       WidthRequest="240"
+                       HeightRequest="240"
+                       Aspect="AspectFit"
+                       HorizontalOptions="Center" />
+            </Border>
+        </VerticalStackLayout>
+
+        <Label Grid.Row="1"
+               Text="Tocca lo schermo per continuare"
+               FontSize="16"
+               TextColor="#64748B"
+               HorizontalTextAlignment="Center"
+               Margin="0,0,0,16" />
+    </Grid>
+</ContentPage>

@@ -24,5 +24,8 @@ namespace AlessandroGozzi.AppAAC.Domain.Repositories
         Task SaveActivityAsync(Guid routineId, Activity activity, CancellationToken cancellationToken = default);
         Task DeleteActivityAsync(Guid activityId, CancellationToken cancellationToken = default);
         Task UpdateActivitiesOrderAsync(Guid routineId, List<Guid> orderedActivityIds, CancellationToken cancellationToken = default);
+
+        // --- ACTIONS ---
+        Task<List<RoutineAction>> GetActionsByActivityIdAsync(Guid activityId, CancellationToken cancellationToken = default);
     }
 }

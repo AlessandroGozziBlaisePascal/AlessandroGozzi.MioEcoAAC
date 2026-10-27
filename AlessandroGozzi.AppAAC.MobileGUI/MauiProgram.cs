@@ -33,11 +33,15 @@ namespace AlessandroGozzi.AppAAC.MobileGUI
             // 3. ViewModels
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<ActivityViewModel>();
+            builder.Services.AddTransient<ActionsViewModel>();
+            builder.Services.AddTransient<CongratulationsViewModel>();
 
             // 4. Pagine
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<ActivityPage>();
             builder.Services.AddTransient<IntroPage>();
+            builder.Services.AddTransient<RoutineActionsPage>();
+            builder.Services.AddTransient<CongratulationsPage>();
 
             var app = builder.Build();
 

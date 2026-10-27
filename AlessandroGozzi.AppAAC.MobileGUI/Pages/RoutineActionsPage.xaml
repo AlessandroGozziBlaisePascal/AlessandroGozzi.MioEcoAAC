@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
+             x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.RoutineActionsPage"
+             x:DataType="viewmodels:ActionsViewModel"
+             Shell.BackButtonBehavior="{BackButtonBehavior IsVisible=False}"
+             BackgroundColor="#F8FAFC">
+
+    <!-- Barra superiore con freccia indietro -->
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="Auto, *" VerticalOptions="Center" ColumnSpacing="12">
+            <ImageButton Grid.Column="0"
+                         Command="{Binding TornaIndietroCommand}"
+                         BackgroundColor="Transparent"
+                         HeightRequest="36"
+                         WidthRequest="36"
+                         Aspect="AspectFit">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#x2190;"
+                                     FontFamily="OpenSansSemibold"
+                                     Color="#0A2540"
+                                     Size="24" />
+                </ImageButton.Source>
+            </ImageButton>
+
+            <Label Grid.Column="1"
+                   Text="Azioni da fare"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#0A2540"
+                   VerticalTextAlignment="Center" />
+        </Grid>
+    </Shell.TitleView>
+
+    <Grid>
+        <!-- 1. ELENCO DELLE AZIONI -->
+        <CollectionView ItemsSource="{Binding ActionItems}"
+                        Margin="16"
+                        SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="14" VerticalItemSpacing="14"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="viewmodels:ActionStepItem">
+                    <Border StrokeThickness="2"
+                            StrokeShape="RoundRectangle 16"
+                            Padding="12">
+
+                        <!-- Stili condizionali: sbloccato vs bloccato -->
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Stroke" Value="#E2E8F0" />
+                                <Setter Property="BackgroundColor" Value="#EDF2F7" />
+                                <Setter Property="Opacity" Value="0.45" />
+
+                                <Style.Triggers>
+                                    <!-- Quando l'azione è sbloccata -->
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsUnlocked}" Value="True">
+                                        <Setter Property="Stroke" Value="#1A43BF" />
+                                        <Setter Property="BackgroundColor" Value="White" />
+                                        <Setter Property="Opacity" Value="1.0" />
+                                    </DataTrigger>
+                                    <!-- Quando l'azione è completata -->
+                                    <DataTrigger TargetType="Border" Binding="{Binding IsCompleted}" Value="True">
+                                        <Setter Property="Stroke" Value="#16A34A" />
+                                        <Setter Property="BackgroundColor" Value="#F0FDF4" />
+                                        <Setter Property="Opacity" Value="0.85" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ActionsViewModel}}, Path=ApriAzioneCommand}"
+                                                  CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Grid HorizontalOptions="Center">
+                                <Image Source="{Binding Action.ImageUrl}"
+                                       WidthRequest="85"
+                                       HeightRequest="85"
+                                       Aspect="AspectFit" />
+
+                                <!-- Spunta verde se completato -->
+                                <Label Text="✓"
+                                       TextColor="#16A34A"
+                                       FontSize="28"
+                                       FontAttributes="Bold"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Start"
+                                       IsVisible="{Binding IsCompleted}" />
+                            </Grid>
+
+                            <Label Text="{Binding Action.Name}"
+                                   FontSize="15"
+                                   FontAttributes="Bold"
+                                   TextColor="#0A2540"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- 2. SCHERMATA GRANDE / POPUP A TUTTO SCHERMO -->
+        <Grid BackgroundColor="#D9000000"
+              IsVisible="{Binding IsModalOpen}"
+              Padding="24"
+              RowDefinitions="*, Auto">
+
+            <!-- Card centrale ingrandita -->
+            <Border Grid.Row="0"
+                    Stroke="#1A43BF"
+                    StrokeThickness="3"
+                    StrokeShape="RoundRectangle 24"
+                    BackgroundColor="White"
+                    Padding="24"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    MaximumWidthRequest="380">
+
+                <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
+                    <!-- Tasto X in alto per uscire se aperto per sbaglio -->
+                    <Button Text="✕"
+                            FontSize="18"
+                            TextColor="#64748B"
+                            BackgroundColor="Transparent"
+                            HorizontalOptions="End"
+                            HeightRequest="36"
+                            WidthRequest="36"
+                            Padding="0"
+                            Command="{Binding ChiudiSchermoGrandeCommand}" />
+
+                    <!-- Immagine grande -->
+                    <Image Source="{Binding ActiveModalItem.Action.ImageUrl}"
+                           WidthRequest="210"
+                           HeightRequest="210"
+                           Aspect="AspectFit"
+                           HorizontalOptions="Center" />
+
+                    <!-- Testo dell'azione ingrandito -->
+                    <Label Text="{Binding ActiveModalItem.Action.Name}"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#0A2540"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Bottone con Spunta Verde in basso -->
+            <Button Grid.Row="1"
+                    Text="✓ Fatto!"
+                    FontSize="22"
+                    FontAttributes="Bold"
+                    BackgroundColor="#16A34A"
+                    TextColor="White"
+                    CornerRadius="16"
+                    HeightRequest="64"
+                    Margin="0,16,0,8"
+                    Command="{Binding CompletaAzioneCorrenteCommand}" />
+        </Grid>
+    </Grid>
+</ContentPage>

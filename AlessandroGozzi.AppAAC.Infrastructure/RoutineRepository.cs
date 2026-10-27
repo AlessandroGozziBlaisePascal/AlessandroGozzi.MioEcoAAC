@@ -171,4 +171,18 @@ public class RoutineRepository : IRoutineRepository
             }
         }
     }
+
+    public async Task<List<RoutineAction>> GetActionsByActivityIdAsync(Guid activityId, CancellationToken cancellationToken = default)
+    {
+        var activity = await _database!.Table<Activity>()
+                                      .FirstOrDefaultAsync(a => a.Id == activityId);
+
+        if (activity == null)
+            return new List<RoutineAction>();
+
+        return await _database.Table<RoutineAction>()
+                              .Where(a => a.ActivityId == activity.Id)
+                              .OrderBy(a => a.Order) 
+                              .ToListAsync();
+    }
 }

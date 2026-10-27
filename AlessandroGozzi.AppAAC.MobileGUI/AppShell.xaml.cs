@@ -9,6 +9,8 @@ namespace AlessandroGozzi.AppAAC.MobileGUI
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(ActivityPage), typeof(ActivityPage));
+            Routing.RegisterRoute("ActionsPage", typeof(RoutineActionsPage));
+            Routing.RegisterRoute(nameof(CongratulationsPage), typeof(CongratulationsPage));
         }
     }
 }

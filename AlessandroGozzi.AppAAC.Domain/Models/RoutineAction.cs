@@ -16,6 +16,8 @@ namespace AlessandroGozzi.AppAAC.Domain.Models
         [Indexed]
         public Guid ActivityId { get; set; }
 
+        public int Order { get; set; }
+
         public string Name { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
         public string SpeechText { get; set; } = string.Empty;
