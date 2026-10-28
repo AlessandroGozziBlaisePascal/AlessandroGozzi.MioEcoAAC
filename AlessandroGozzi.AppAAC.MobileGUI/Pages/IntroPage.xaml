@@ -7,7 +7,29 @@
              Shell.NavBarIsVisible="False">
 
     <Grid>
-        <!-- Contenitore animato -->
+        <!-- Stelline ed Effetti Luminosi a Sinistra -->
+        <Label x:Name="StarLeft1" Text="✨" FontSize="36" TextColor="#F59E0B"
+               HorizontalOptions="Start" VerticalOptions="Start" Margin="35, 140, 0, 0"
+               Opacity="0" Scale="0.5" />
+        <Label x:Name="StarLeft2" Text="⭐" FontSize="26" TextColor="#FBBF24"
+               HorizontalOptions="Start" VerticalOptions="Center" Margin="25, 0, 0, 40"
+               Opacity="0" Scale="0.5" />
+        <Label x:Name="StarLeft3" Text="✨" FontSize="32" TextColor="#F59E0B"
+               HorizontalOptions="Start" VerticalOptions="End" Margin="45, 0, 0, 160"
+               Opacity="0" Scale="0.5" />
+
+        <!-- Stelline ed Effetti Luminosi a Destra -->
+        <Label x:Name="StarRight1" Text="⭐" FontSize="28" TextColor="#FBBF24"
+               HorizontalOptions="End" VerticalOptions="Start" Margin="0, 160, 40, 0"
+               Opacity="0" Scale="0.5" />
+        <Label x:Name="StarRight2" Text="✨" FontSize="38" TextColor="#F59E0B"
+               HorizontalOptions="End" VerticalOptions="Center" Margin="0, 40, 25, 0"
+               Opacity="0" Scale="0.5" />
+        <Label x:Name="StarRight3" Text="⭐" FontSize="24" TextColor="#FBBF24"
+               HorizontalOptions="End" VerticalOptions="End" Margin="0, 0, 50, 140"
+               Opacity="0" Scale="0.5" />
+
+        <!-- Contenitore centrale (Logo + Titolo) -->
         <VerticalStackLayout x:Name="LogoContainer"
                              Spacing="28"
                              HorizontalOptions="Center"
@@ -15,7 +37,7 @@
                              Opacity="0"
                              Scale="0.8">
 
-            <!-- Card contenitore: grandezza invariata (270x270), padding ridotto per espandere il logo -->
+            <!-- Card contenitore -->
             <Border Stroke="#E2E8F0"
                     StrokeThickness="1"
                     Background="#FFFFFF"
@@ -35,7 +57,6 @@
                             Opacity="0.8" />
                 </Border.Shadow>
 
-                <!-- Immagine ingrandita al massimo all'interno del riquadro -->
                 <Image Source="logoapp.png"
                        Aspect="AspectFit"
                        WidthRequest="240"
@@ -44,7 +65,7 @@
                        VerticalOptions="Center" />
             </Border>
 
-            <!-- Nome dell'applicazione: ingrandito a 60 -->
+            <!-- Nome applicazione -->
             <Label Text="MioEco"
                    FontFamily="cursive"
                    FontSize="60"

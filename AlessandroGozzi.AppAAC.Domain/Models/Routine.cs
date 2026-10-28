@@ -16,6 +16,7 @@ namespace AlessandroGozzi.AppAAC.Domain.Models
 
         public string Name { get; set; } = string.Empty;
         public string SpeechText { get; set; } = string.Empty;
+        public string ImageUrl { get; set; } = string.Empty;
         public RoutineType Type { get; set; }
         public bool IsDeleted { get; set; } = false;
 

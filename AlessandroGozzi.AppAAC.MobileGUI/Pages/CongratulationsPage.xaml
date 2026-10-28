@@ -5,7 +5,7 @@
              x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.CongratulationsPage"
              x:DataType="viewmodels:CongratulationsViewModel"
              Shell.BackButtonBehavior="{BackButtonBehavior IsVisible=False}"
-             BackgroundColor="#F8FAFC">
+             BackgroundColor="#F0F4F8">
 
     <!-- Il tocco in qualunque punto della Grid attiva il comando di ritorno -->
     <Grid RowDefinitions="*, Auto" Padding="24">
@@ -16,40 +16,66 @@
         <VerticalStackLayout Grid.Row="0"
                              VerticalOptions="Center"
                              HorizontalOptions="Center"
-                             Spacing="20">
+                             Spacing="18">
 
-            <Label Text="COMPLIMENTI!"
-                   FontSize="36"
+            <!-- Titolo enfatico e festoso coordinato con verde traguardo -->
+            <Label Text="COMPLIMENTI! 🎉"
+                   FontSize="34"
                    FontAttributes="Bold"
                    TextColor="#16A34A"
-                   HorizontalTextAlignment="Center" />
+                   HorizontalTextAlignment="Center">
+                <Label.Shadow>
+                    <Shadow Brush="#2016A34A"
+                            Offset="0,3"
+                            Radius="8"
+                            Opacity="0.5" />
+                </Label.Shadow>
+            </Label>
 
             <Label Text="Hai finito l'attività!"
                    FontSize="22"
                    FontAttributes="Bold"
-                   TextColor="#0A2540"
+                   TextColor="#0F2A4A"
                    HorizontalTextAlignment="Center" />
 
-            <Border StrokeThickness="0"
-                    StrokeShape="RoundRectangle 24"
-                    BackgroundColor="White"
+            <!-- Card centrale con bordo azzurro MioEco e ombra morbida -->
+            <Border Stroke="#38BDF8"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 28"
+                    BackgroundColor="#FFFFFF"
                     Padding="16"
                     MaximumWidthRequest="320"
                     HorizontalOptions="Center">
 
+                <Border.Shadow>
+                    <Shadow Brush="#150284C7"
+                            Offset="0,6"
+                            Radius="16"
+                            Opacity="0.45" />
+                </Border.Shadow>
+
                 <Image Source="complimenti_pagina.jpg"
-                       WidthRequest="240"
-                       HeightRequest="240"
+                       WidthRequest="230"
+                       HeightRequest="230"
                        Aspect="AspectFit"
                        HorizontalOptions="Center" />
             </Border>
         </VerticalStackLayout>
 
-        <Label Grid.Row="1"
-               Text="Tocca lo schermo per continuare"
-               FontSize="16"
-               TextColor="#64748B"
-               HorizontalTextAlignment="Center"
-               Margin="0,0,0,16" />
+        <!-- Indicazione di tocco racchiusa in una pillola chiara rassicurante -->
+        <Border Grid.Row="1"
+                Stroke="#E2E8F0"
+                StrokeThickness="1"
+                StrokeShape="RoundRectangle 20"
+                BackgroundColor="#FFFFFF"
+                Padding="16,10"
+                HorizontalOptions="Center"
+                Margin="0,0,0,16">
+            <Label Text="Tocca lo schermo per continuare"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextColor="#0284C7"
+                   HorizontalTextAlignment="Center" />
+        </Border>
     </Grid>
 </ContentPage>

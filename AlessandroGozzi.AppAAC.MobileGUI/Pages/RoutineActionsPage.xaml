@@ -5,22 +5,23 @@
              x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.RoutineActionsPage"
              x:DataType="viewmodels:ActionsViewModel"
              Shell.BackButtonBehavior="{BackButtonBehavior IsVisible=False}"
-             BackgroundColor="#F8FAFC">
+             BackgroundColor="#F0F4F8">
 
-    <!-- Barra superiore con freccia indietro -->
+    <!-- Barra superiore coordinata con freccia indietro e titolo -->
     <Shell.TitleView>
         <Grid ColumnDefinitions="Auto, *" VerticalOptions="Center" ColumnSpacing="12">
             <ImageButton Grid.Column="0"
                          Command="{Binding TornaIndietroCommand}"
                          BackgroundColor="Transparent"
-                         HeightRequest="36"
-                         WidthRequest="36"
+                         HeightRequest="40"
+                         WidthRequest="40"
+                         Padding="6"
                          Aspect="AspectFit">
                 <ImageButton.Source>
                     <FontImageSource Glyph="&#x2190;"
                                      FontFamily="OpenSansSemibold"
-                                     Color="#0A2540"
-                                     Size="24" />
+                                     Color="#0F2A4A"
+                                     Size="26" />
                 </ImageButton.Source>
             </ImageButton>
 
@@ -28,7 +29,7 @@
                    Text="Azioni da fare"
                    FontSize="20"
                    FontAttributes="Bold"
-                   TextColor="#0A2540"
+                   TextColor="#0F2A4A"
                    VerticalTextAlignment="Center" />
         </Grid>
     </Shell.TitleView>
@@ -39,34 +40,46 @@
                         Margin="16"
                         SelectionMode="None">
             <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="14" VerticalItemSpacing="14"/>
+                <GridItemsLayout Orientation="Vertical"
+                                 Span="2"
+                                 HorizontalItemSpacing="14"
+                                 VerticalItemSpacing="14" />
             </CollectionView.ItemsLayout>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="viewmodels:ActionStepItem">
                     <Border StrokeThickness="2"
-                            StrokeShape="RoundRectangle 16"
-                            Padding="12">
+                            StrokeShape="RoundRectangle 22"
+                            Padding="14"
+                            HeightRequest="190">
 
-                        <!-- Stili condizionali: sbloccato vs bloccato -->
+                        <Border.Shadow>
+                            <Shadow Brush="#150284C7"
+                                    Offset="0,4"
+                                    Radius="10"
+                                    Opacity="0.4" />
+                        </Border.Shadow>
+
+                        <!-- Stili condizionali: bloccato vs attivo vs completato -->
                         <Border.Style>
                             <Style TargetType="Border">
+                                <!-- Stato base: bloccato / inattivo -->
                                 <Setter Property="Stroke" Value="#E2E8F0" />
-                                <Setter Property="BackgroundColor" Value="#EDF2F7" />
+                                <Setter Property="BackgroundColor" Value="#E2E8F0" />
                                 <Setter Property="Opacity" Value="0.45" />
 
                                 <Style.Triggers>
-                                    <!-- Quando l'azione è sbloccata -->
+                                    <!-- Quando l'azione è sbloccata / attiva: tema azzurro MioEco -->
                                     <DataTrigger TargetType="Border" Binding="{Binding IsUnlocked}" Value="True">
-                                        <Setter Property="Stroke" Value="#1A43BF" />
-                                        <Setter Property="BackgroundColor" Value="White" />
+                                        <Setter Property="Stroke" Value="#0284C7" />
+                                        <Setter Property="BackgroundColor" Value="#FFFFFF" />
                                         <Setter Property="Opacity" Value="1.0" />
                                     </DataTrigger>
-                                    <!-- Quando l'azione è completata -->
+                                    <!-- Quando l'azione è completata: verde rassicurante -->
                                     <DataTrigger TargetType="Border" Binding="{Binding IsCompleted}" Value="True">
                                         <Setter Property="Stroke" Value="#16A34A" />
                                         <Setter Property="BackgroundColor" Value="#F0FDF4" />
-                                        <Setter Property="Opacity" Value="0.85" />
+                                        <Setter Property="Opacity" Value="0.9" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -77,90 +90,118 @@
                                                   CommandParameter="{Binding .}" />
                         </Border.GestureRecognizers>
 
-                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                        <VerticalStackLayout Spacing="10"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center">
                             <Grid HorizontalOptions="Center">
                                 <Image Source="{Binding Action.ImageUrl}"
-                                       WidthRequest="85"
-                                       HeightRequest="85"
+                                       WidthRequest="95"
+                                       HeightRequest="95"
                                        Aspect="AspectFit" />
 
-                                <!-- Spunta verde se completato -->
-                                <Label Text="✓"
-                                       TextColor="#16A34A"
-                                       FontSize="28"
-                                       FontAttributes="Bold"
-                                       HorizontalOptions="End"
-                                       VerticalOptions="Start"
-                                       IsVisible="{Binding IsCompleted}" />
+                                <!-- Badge spunta verde se completato -->
+                                <Border BackgroundColor="#16A34A"
+                                        StrokeThickness="0"
+                                        StrokeShape="RoundRectangle 14"
+                                        WidthRequest="28"
+                                        HeightRequest="28"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Start"
+                                        Margin="0,-4,-4,0"
+                                        IsVisible="{Binding IsCompleted}">
+                                    <Label Text="✓"
+                                           TextColor="White"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+                                </Border>
                             </Grid>
 
                             <Label Text="{Binding Action.Name}"
-                                   FontSize="15"
+                                   FontSize="16"
                                    FontAttributes="Bold"
-                                   TextColor="#0A2540"
-                                   HorizontalTextAlignment="Center" />
+                                   TextColor="#0F2A4A"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="TailTruncation"
+                                   MaxLines="2" />
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- 2. SCHERMATA GRANDE / POPUP A TUTTO SCHERMO -->
-        <Grid BackgroundColor="#D9000000"
+        <!-- 2. MODALE A TUTTO SCHERMO PER L'AZIONE SELEZIONATA -->
+        <Grid BackgroundColor="#CC0F2A4A"
               IsVisible="{Binding IsModalOpen}"
-              Padding="24"
+              Padding="20"
               RowDefinitions="*, Auto">
 
             <!-- Card centrale ingrandita -->
             <Border Grid.Row="0"
-                    Stroke="#1A43BF"
-                    StrokeThickness="3"
-                    StrokeShape="RoundRectangle 24"
-                    BackgroundColor="White"
+                    Stroke="#38BDF8"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 28"
+                    BackgroundColor="#FFFFFF"
                     Padding="24"
                     VerticalOptions="Center"
                     HorizontalOptions="Center"
                     MaximumWidthRequest="380">
 
+                <Border.Shadow>
+                    <Shadow Brush="#30000000"
+                            Offset="0,8"
+                            Radius="24"
+                            Opacity="0.8" />
+                </Border.Shadow>
+
                 <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
-                    <!-- Tasto X in alto per uscire se aperto per sbaglio -->
+                    <!-- Tasto per chiudere la modale -->
                     <Button Text="✕"
                             FontSize="18"
                             TextColor="#64748B"
-                            BackgroundColor="Transparent"
+                            BackgroundColor="#F1F5F9"
+                            CornerRadius="18"
                             HorizontalOptions="End"
                             HeightRequest="36"
                             WidthRequest="36"
                             Padding="0"
                             Command="{Binding ChiudiSchermoGrandeCommand}" />
 
-                    <!-- Immagine grande -->
+                    <!-- Immagine ingrandita -->
                     <Image Source="{Binding ActiveModalItem.Action.ImageUrl}"
-                           WidthRequest="210"
-                           HeightRequest="210"
+                           WidthRequest="220"
+                           HeightRequest="220"
                            Aspect="AspectFit"
                            HorizontalOptions="Center" />
 
-                    <!-- Testo dell'azione ingrandito -->
+                    <!-- Nome dell'azione in risalto -->
                     <Label Text="{Binding ActiveModalItem.Action.Name}"
                            FontSize="24"
                            FontAttributes="Bold"
-                           TextColor="#0A2540"
+                           TextColor="#0F2A4A"
                            HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Bottone con Spunta Verde in basso -->
+            <!-- Tasto di completamento azione -->
             <Button Grid.Row="1"
                     Text="✓ Fatto!"
                     FontSize="22"
                     FontAttributes="Bold"
                     BackgroundColor="#16A34A"
-                    TextColor="White"
-                    CornerRadius="16"
-                    HeightRequest="64"
+                    TextColor="#FFFFFF"
+                    CornerRadius="18"
+                    HeightRequest="60"
                     Margin="0,16,0,8"
-                    Command="{Binding CompletaAzioneCorrenteCommand}" />
+                    Command="{Binding CompletaAzioneCorrenteCommand}">
+                <Button.Shadow>
+                    <Shadow Brush="#2516A34A"
+                            Offset="0,4"
+                            Radius="10"
+                            Opacity="0.6" />
+                </Button.Shadow>
+            </Button>
         </Grid>
     </Grid>
 </ContentPage>
