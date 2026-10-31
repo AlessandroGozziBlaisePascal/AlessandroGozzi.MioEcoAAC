@@ -1,5 +1,6 @@
-﻿using AlessandroGozzi.AppAAC.Domain.Repositories;
+﻿using AlessandroGozzi.AppAAC.Domain.Interfaces;
 using AlessandroGozzi.AppAAC.Infrastructure;
+using AlessandroGozzi.AppAAC.Infrastructure.Service;
 using AlessandroGozzi.AppAAC.MobileGUI.Pages;
 using AlessandroGozzi.AppAAC.MobileGUI.Services;
 using AlessandroGozzi.AppAAC.MobileGUI.ViewModels;
@@ -29,12 +30,17 @@ namespace AlessandroGozzi.AppAAC.MobileGUI
             builder.Services.AddSingleton<IRoutineRepository>(sp => new RoutineRepository(dbPath));
             builder.Services.AddSingleton(AudioManager.Current);
             builder.Services.AddSingleton<ITextToSpeechService, TextToSpeechService>();
+            builder.Services.AddHttpClient<IArasaacService, ArasaacService>();
 
             // 3. ViewModels
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<ActivityViewModel>();
             builder.Services.AddTransient<ActionsViewModel>();
             builder.Services.AddTransient<CongratulationsViewModel>();
+            builder.Services.AddTransient<AddRoutineViewModel>();
+            builder.Services.AddTransient<AddActivityViewModel>();
+            builder.Services.AddTransient<AddActionViewModel>();
+            builder.Services.AddTransient<SettingsViewModel>();
 
             // 4. Pagine
             builder.Services.AddTransient<HomePage>();
@@ -42,6 +48,10 @@ namespace AlessandroGozzi.AppAAC.MobileGUI
             builder.Services.AddTransient<IntroPage>();
             builder.Services.AddTransient<RoutineActionsPage>();
             builder.Services.AddTransient<CongratulationsPage>();
+            builder.Services.AddTransient<AddRoutinePage>();
+            builder.Services.AddTransient<AddActivityPage>();
+            builder.Services.AddTransient<AddActionPage>();
+            builder.Services.AddTransient<SettingsPage>();
 
             var app = builder.Build();
 

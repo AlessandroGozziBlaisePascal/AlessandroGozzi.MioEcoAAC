@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using AlessandroGozzi.AppAAC.Domain.Models;
 using Activity = AlessandroGozzi.AppAAC.Domain.Models.Activity;
 
-namespace AlessandroGozzi.AppAAC.Domain.Repositories
+namespace AlessandroGozzi.AppAAC.Domain.Interfaces
 {
     public interface IRoutineRepository
     {
@@ -26,6 +26,7 @@ namespace AlessandroGozzi.AppAAC.Domain.Repositories
         Task UpdateActivitiesOrderAsync(Guid routineId, List<Guid> orderedActivityIds, CancellationToken cancellationToken = default);
 
         // --- ACTIONS ---
+        Task SaveActionAsync(Guid activityId, RoutineAction action);
         Task<List<RoutineAction>> GetActionsByActivityIdAsync(Guid activityId, CancellationToken cancellationToken = default);
     }
 }

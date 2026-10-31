@@ -1,4 +1,4 @@
-using AlessandroGozzi.AppAAC.Domain.Repositories;
+using AlessandroGozzi.AppAAC.Domain.Interfaces;
 using AlessandroGozzi.AppAAC.MobileGUI.Services;
 using Plugin.Maui.Audio;
 
@@ -27,11 +27,24 @@ public partial class IntroPage : ContentPage
 
         await Task.Delay(200);
 
-        // 1. Animazione combinata di comparsa (Logo + Nome)
+        // 1. Animazione sincronizzata di comparsa (LogoContainer e AuthorLabel)
+        var animations = new List<Task>();
+
         if (LogoContainer != null)
         {
-            _ = LogoContainer.FadeTo(1, 700, Easing.CubicIn);
-            _ = LogoContainer.ScaleTo(1.0, 700, Easing.CubicOut);
+            animations.Add(LogoContainer.FadeTo(1, 700, Easing.CubicIn));
+            animations.Add(LogoContainer.ScaleTo(1.0, 700, Easing.CubicOut));
+        }
+
+        if (AuthorLabel != null)
+        {
+            animations.Add(AuthorLabel.FadeTo(1, 700, Easing.CubicIn));
+            animations.Add(AuthorLabel.ScaleTo(1.0, 700, Easing.CubicOut));
+        }
+
+        if (animations.Count > 0)
+        {
+            await Task.WhenAll(animations);
         }
 
         // 2. Riproduzione del suono dell'arpa
@@ -41,7 +54,6 @@ public partial class IntroPage : ContentPage
             var player = _audioManager.CreatePlayer(audioStream);
             player.Play();
 
-            // Pausa per lasciare risuonare l'arpa prima di avviare la voce
             await Task.Delay(1200);
         }
         catch

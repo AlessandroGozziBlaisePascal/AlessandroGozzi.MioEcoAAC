@@ -6,97 +6,365 @@
              x:Class="AlessandroGozzi.AppAAC.MobileGUI.HomePage"
              x:DataType="vm:HomeViewModel"
              x:Name="RootPage"
-             Title="Seleziona Routine"
-             BackgroundColor="#F8FAFC">
+             BackgroundColor="#F0F4F8">
 
-    <Grid RowDefinitions="*, Auto">
+    <!-- Barra superiore con Titolo, Tasto Impostazioni Caregiver e Tasto Toggle Modifica -->
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*, Auto, Auto" VerticalOptions="Center" Margin="0,0,16,0" ColumnSpacing="10">
+            <!-- Titolo Principale -->
+            <Label Grid.Column="0"
+                   Text="Seleziona Routine"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   TextColor="#0F2A4A"
+                   VerticalTextAlignment="Center" />
 
-        <!-- 1. Lista Routine con Selezione -->
-        <CollectionView Grid.Row="0"
-                        ItemsSource="{Binding Routines}"
-                        SelectionMode="Single"
-                        SelectedItem="{Binding SelectedRoutine, Mode=TwoWay}"
-                        Margin="16">
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical"
-                                 Span="2"
-                                 HorizontalItemSpacing="12"
-                                 VerticalItemSpacing="12" />
-            </CollectionView.ItemsLayout>
-
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Routine">
-                    <Border x:Name="RoutineCard"
-                            StrokeShape="RoundRectangle 16"
-                            Stroke="#CBD5E1"
-                            StrokeThickness="2"
-                            BackgroundColor="White"
-                            Padding="16">
-
-                        <!-- Feedback visivo quando la card è selezionata -->
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Normal" />
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="Stroke" Value="#1E40AF" />
-                                        <Setter Property="StrokeThickness" Value="3" />
-                                        <Setter Property="BackgroundColor" Value="#EFF6FF" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-
-                        <VerticalStackLayout Spacing="8"
-                                             HorizontalOptions="Center"
-                                             VerticalOptions="Center">
-                            <Label Text="{Binding Name}"
-                                   FontSize="20"
-                                   FontAttributes="Bold"
-                                   TextColor="#1E3A8A"
-                                   HorizontalTextAlignment="Center" />
-                            <Label Text="{Binding SpeechText}"
-                                   FontSize="14"
-                                   TextColor="#64748B"
-                                   HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-
-            <CollectionView.EmptyView>
-                <Label Text="Nessuna routine trovata nel database."
-                       FontSize="16"
-                       TextColor="#64748B"
+            <!-- Tasto Ingresso Impostazioni Caregiver (Icona Ingranaggio) -->
+            <Border Grid.Column="1"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1.5"
+                    StrokeShape="RoundRectangle 10"
+                    BackgroundColor="#FFFFFF"
+                    HeightRequest="38"
+                    WidthRequest="38"
+                    Padding="0">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding OpenParentalGateCommand}" />
+                </Border.GestureRecognizers>
+                <Label Text="⚙️"
+                       FontSize="18"
                        HorizontalOptions="Center"
                        VerticalOptions="Center" />
-            </CollectionView.EmptyView>
-        </CollectionView>
+            </Border>
 
-        <!-- Indicatore di caricamento -->
-        <ActivityIndicator Grid.Row="0"
-                           IsRunning="{Binding IsLoading}"
-                           IsVisible="{Binding IsLoading}"
-                           Color="#1E40AF"
-                           WidthRequest="48"
-                           HeightRequest="48"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center" />
+            <!-- Tasto Toggle Modifica (Pillola con stato dinamico) -->
+            <Border Grid.Column="2"
+                    StrokeThickness="1.5"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="16,8">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Stroke" Value="#0284C7" />
+                        <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                        <Style.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="Stroke" Value="#16A34A" />
+                                <Setter Property="BackgroundColor" Value="#F0FDF4" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
 
-        <!-- 2. Barra inferiore con Bottone di Conferma -->
-        <Border Grid.Row="1"
-                BackgroundColor="White"
-                StrokeShape="RoundRectangle 16,16,0,0"
-                Padding="16"
-                Stroke="#E2E8F0">
-            <Button Text="Seleziona Routine"
-                    Command="{Binding LoadRoutineActionsCommand}"
-                    BackgroundColor="#1E40AF"
-                    TextColor="White"
-                    FontAttributes="Bold"
-                    CornerRadius="12"
-                    HeightRequest="52" />
-        </Border>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleEditModeCommand}" />
+                </Border.GestureRecognizers>
 
+                <Label Text="{Binding EditButtonText}"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Setter Property="TextColor" Value="#0284C7" />
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsEditMode}" Value="True">
+                                    <Setter Property="TextColor" Value="#16A34A" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
+            </Border>
+        </Grid>
+    </Shell.TitleView>
+
+    <Grid>
+        <!-- LAYOUT BASE: Griglia Routine + Barra Inferiore -->
+        <Grid RowDefinitions="*, Auto">
+
+            <ScrollView Grid.Row="0">
+                <VerticalStackLayout Spacing="14" Margin="16">
+
+                    <!-- Griglia Routine -->
+                    <CollectionView ItemsSource="{Binding Routines}"
+                                    SelectionMode="None">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical"
+                                             Span="2"
+                                             HorizontalItemSpacing="14"
+                                             VerticalItemSpacing="14" />
+                        </CollectionView.ItemsLayout>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Routine">
+                                <Grid HeightRequest="190">
+
+                                    <!-- 1. TESSERA ROUTINE NORMALE -->
+                                    <Border StrokeShape="RoundRectangle 22"
+                                            Padding="14">
+
+                                        <Border.Shadow>
+                                            <Shadow Brush="#150284C7"
+                                                    Offset="0,4"
+                                                    Radius="10"
+                                                    Opacity="0.4" />
+                                        </Border.Shadow>
+
+                                        <!-- Stile dinamico: Normale, Selezionata Azzurra, Modifica Rossa -->
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Stroke" Value="#E2E8F0" />
+                                                <Setter Property="StrokeThickness" Value="2" />
+                                                <Setter Property="BackgroundColor" Value="#FFFFFF" />
+
+                                                <Style.Triggers>
+                                                    <!-- Selezionata in modalità normale: AZZURRO -->
+                                                    <MultiTrigger TargetType="Border">
+                                                        <MultiTrigger.Conditions>
+                                                            <BindingCondition Binding="{Binding IsSelected}" Value="True" />
+                                                            <BindingCondition Binding="{Binding Source={x:Reference RootPage}, Path=BindingContext.IsEditMode}" Value="False" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Stroke" Value="#0284C7" />
+                                                        <Setter Property="StrokeThickness" Value="3" />
+                                                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                                                    </MultiTrigger>
+
+                                                    <!-- Selezionata in modalità modifica: ROSSO -->
+                                                    <MultiTrigger TargetType="Border">
+                                                        <MultiTrigger.Conditions>
+                                                            <BindingCondition Binding="{Binding IsSelected}" Value="True" />
+                                                            <BindingCondition Binding="{Binding Source={x:Reference RootPage}, Path=BindingContext.IsEditMode}" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Stroke" Value="#EF4444" />
+                                                        <Setter Property="StrokeThickness" Value="3" />
+                                                        <Setter Property="BackgroundColor" Value="#FEE2E2" />
+                                                    </MultiTrigger>
+
+                                                    <!-- Nasconde se è la card '+' -->
+                                                    <DataTrigger TargetType="Border" Binding="{Binding IsAddButton}" Value="True">
+                                                        <Setter Property="IsVisible" Value="False" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference RootPage}, Path=BindingContext.SelectRoutineCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+
+                                        <VerticalStackLayout Spacing="10"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+
+                                            <Image Source="{Binding ImageUrl}"
+                                                   WidthRequest="95"
+                                                   HeightRequest="95"
+                                                   Aspect="AspectFit"
+                                                   HorizontalOptions="Center" />
+
+                                            <Label Text="{Binding Name}"
+                                                   FontSize="18"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#0F2A4A"
+                                                   HorizontalTextAlignment="Center"
+                                                   LineBreakMode="TailTruncation"
+                                                   MaxLines="2" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                    <!-- 2. TESSERA TRATTEGGIATA CON '+' (Visibile solo in Edit Mode) -->
+                                    <Border Stroke="#0284C7"
+                                            StrokeThickness="2"
+                                            StrokeDashArray="4,2"
+                                            StrokeShape="RoundRectangle 22"
+                                            BackgroundColor="#F0F9FF"
+                                            Padding="14"
+                                            IsVisible="False">
+
+                                        <Border.Triggers>
+                                            <DataTrigger TargetType="Border" Binding="{Binding IsAddButton}" Value="True">
+                                                <Setter Property="IsVisible" Value="True" />
+                                            </DataTrigger>
+                                        </Border.Triggers>
+
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={x:Reference RootPage}, Path=BindingContext.AggiungiRoutineCommand}" />
+                                        </Border.GestureRecognizers>
+
+                                        <VerticalStackLayout Spacing="10"
+                                                             HorizontalOptions="Center"
+                                                             VerticalOptions="Center">
+                                            <Label Text="+"
+                                                   FontSize="48"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#0284C7"
+                                                   HorizontalOptions="Center" />
+
+                                            <Label Text="Aggiungi routine"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"
+                                                   TextColor="#0284C7"
+                                                   HorizontalTextAlignment="Center"
+                                                   HorizontalOptions="Center" />
+                                        </VerticalStackLayout>
+                                    </Border>
+
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+
+                        <CollectionView.EmptyView>
+                            <Label Text="Nessuna routine trovata nel database."
+                                   FontSize="16"
+                                   TextColor="#64748B"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Margin="0,40,0,0" />
+                        </CollectionView.EmptyView>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <!-- Indicatore di caricamento -->
+            <ActivityIndicator Grid.Row="0"
+                               IsRunning="{Binding IsLoading}"
+                               IsVisible="{Binding IsLoading}"
+                               Color="#0284C7"
+                               WidthRequest="48"
+                               HeightRequest="48"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+
+            <!-- Barra inferiore (Seleziona Routine o Elimina Routine) -->
+            <Border Grid.Row="1"
+                    BackgroundColor="#FFFFFF"
+                    StrokeShape="RoundRectangle 24,24,0,0"
+                    Padding="16,14,16,18"
+                    Stroke="#E2E8F0">
+                <Border.Shadow>
+                    <Shadow Brush="#10000000"
+                            Offset="0,-4"
+                            Radius="12"
+                            Opacity="0.5" />
+                </Border.Shadow>
+
+                <Grid>
+                    <!-- Tasto Seleziona Routine -->
+                    <Button Text="Seleziona Routine"
+                            Command="{Binding LoadRoutineActionsCommand}"
+                            BackgroundColor="#0284C7"
+                            TextColor="#FFFFFF"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            HeightRequest="56">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="IsVisible" Value="False" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                    <!-- Tasto Elimina Routine -->
+                    <Button Text="Elimina Routine"
+                            Command="{Binding EliminaRoutineCommand}"
+                            CommandParameter="{Binding SelectedRoutine}"
+                            BackgroundColor="#EF4444"
+                            TextColor="#FFFFFF"
+                            FontSize="18"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            HeightRequest="56"
+                            IsVisible="False">
+                        <Button.Triggers>
+                            <DataTrigger TargetType="Button" Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="IsVisible" Value="True" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+        <!-- OVERLAY MODALE: BLOCCO GENITORE (PARENTAL LOCK 3 SECONDI) -->
+        <Grid BackgroundColor="#D90F2A4A"
+              IsVisible="{Binding IsParentalGateOpen}"
+              Padding="24">
+
+            <Border BackgroundColor="#FFFFFF"
+                    StrokeShape="RoundRectangle 28"
+                    StrokeThickness="0"
+                    Padding="24"
+                    MaximumWidthRequest="360"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center">
+
+                <Border.Shadow>
+                    <Shadow Brush="#40000000" Offset="0,8" Radius="24" Opacity="0.8" />
+                </Border.Shadow>
+
+                <VerticalStackLayout Spacing="18" HorizontalOptions="Center">
+
+                    <!-- Tasto Chiudi 'X' in alto a destra -->
+                    <Button Text="✕"
+                            FontSize="16"
+                            TextColor="#64748B"
+                            BackgroundColor="#F1F5F9"
+                            CornerRadius="16"
+                            HeightRequest="32"
+                            WidthRequest="32"
+                            Padding="0"
+                            HorizontalOptions="End"
+                            Command="{Binding CloseParentalGateCommand}" />
+
+                    <!-- Icona Lucchetto -->
+                    <Border BackgroundColor="#E0F2FE"
+                            StrokeThickness="0"
+                            StrokeShape="RoundRectangle 35"
+                            HeightRequest="70"
+                            WidthRequest="70"
+                            HorizontalOptions="Center">
+                        <Label Text="🔒"
+                               FontSize="32"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <!-- Intestazione e Istruzioni -->
+                    <Label Text="Area Riservata Caregiver"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#0F2A4A"
+                           HorizontalTextAlignment="Center" />
+
+                    <Label Text="Per accedere alle impostazioni e alle informazioni sull'app, tieni premuto il pulsante qui sotto per 3 secondi."
+                           FontSize="14"
+                           TextColor="#64748B"
+                           HorizontalTextAlignment="Center" />
+
+                    <!-- Barra di progressione animata -->
+                    <ProgressBar Progress="{Binding HoldProgress}"
+                                 ProgressColor="#0284C7"
+                                 HeightRequest="8" />
+
+                    <!-- Pulsante con eventi Pressed e Released collegati al Code-Behind -->
+                    <Button x:Name="HoldButton"
+                            Text="{Binding HoldButtonText}"
+                            FontSize="16"
+                            FontAttributes="Bold"
+                            BackgroundColor="#0284C7"
+                            TextColor="#FFFFFF"
+                            CornerRadius="16"
+                            HeightRequest="56"
+                            Pressed="OnHoldButtonPressed"
+                            Released="OnHoldButtonReleased" />
+
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
     </Grid>
+
 </ContentPage>
