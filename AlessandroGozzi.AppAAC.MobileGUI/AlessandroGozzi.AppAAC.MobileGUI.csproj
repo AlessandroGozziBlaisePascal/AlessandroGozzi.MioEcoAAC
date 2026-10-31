@@ -2,13 +2,6 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net8.0-android</TargetFrameworks>
-
-		<!-- Abilita architetture 32-bit (armeabi-v7a) e 64-bit -->
-		<RuntimeIdentifiers Condition="$(TargetFramework.Contains('-android'))">android-arm;android-arm64</RuntimeIdentifiers>
-
-		<!-- Ignora l'errore di fine supporto dell'SDK per compilare con .NET 8 -->
-		<CheckEolTargetFramework>false</CheckEolTargetFramework>
-
 		<OutputType>Exe</OutputType>
 		<RootNamespace>AlessandroGozzi.AppAAC.MobileGUI</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -16,27 +9,35 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
+		<!-- Supporto architetture 32-bit (armeabi-v7a) e 64-bit (arm64-v8a) -->
+		<RuntimeIdentifiers Condition="$(TargetFramework.Contains('-android'))">android-arm;android-arm64</RuntimeIdentifiers>
+
 		<!-- Nome visibile sotto l'icona sul telefono -->
 		<ApplicationTitle>MioEco</ApplicationTitle>
 
-		<!-- Identificatore univoco del pacchetto (stile ID pacchetto Android) -->
+		<!-- Identificatore univoco del pacchetto -->
 		<ApplicationId>com.alessandrogozzi.mioeco</ApplicationId>
 
 		<!-- Versione dell'app -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
-		
+
+		<!-- Soppressione avvisi SDK ed EOL -->
 		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
 
+		<!-- Versione minima supportata Android (Android 5.0 Lollipop) -->
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- App Icon -->
+		<!-- Icona App -->
 		<MauiIcon Include="Resources\AppIcon\icon_app_logo.png" ResourceName="appicon" Color="#FFFFFF" />
-		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+
+		<!-- Splash Screen bianco neutro senza bot viola -->
+		<MauiSplashScreen Color="#FFFFFF" />
+
+		<!-- Immagini, Font e Asset -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		<MauiFont Include="Resources\Fonts\*" />
@@ -44,54 +45,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.Http" Version="10.0.14" />
+		<!-- Pacchetti allineati a .NET 8 -->
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
-		<PackageReference Include="Plugin.Maui.Audio" Version="4.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.1" />
+		<PackageReference Include="Plugin.Maui.Audio" Version="3.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\AlessandroGozzi.AppAAC.Domain\AlessandroGozzi.AppAAC.Domain.csproj" />
 		<ProjectReference Include="..\AlessandroGozzi.AppAAC.Infrastructure\AlessandroGozzi.AppAAC.Infrastructure.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Compile Update="Pages\IntroPage.xaml.cs">
-			<DependentUpon>IntroPage.xaml</DependentUpon>
-		</Compile>
-		<Compile Update="Pages\HomePage.xaml.cs">
-			<DependentUpon>HomePage.xaml</DependentUpon>
-		</Compile>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiXaml Update="Pages\ActivityPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\AddActionPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\AddActivityPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\AddRoutinePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\CongratulationsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\IntroPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\HomePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\RoutineActionsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\SettingsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	</ItemGroup>
 
 </Project>
