@@ -9,24 +9,20 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
-		<!-- Supporto architetture 32-bit (armeabi-v7a) e 64-bit (arm64-v8a) -->
+		<!-- Target 32-bit (armeabi-v7a) e 64-bit (arm64-v8a) -->
 		<RuntimeIdentifiers Condition="$(TargetFramework.Contains('-android'))">android-arm;android-arm64</RuntimeIdentifiers>
 
-		<!-- Nome visibile sotto l'icona sul telefono -->
+		<!-- Titolo e identificatore dell'app -->
 		<ApplicationTitle>MioEco</ApplicationTitle>
-
-		<!-- Identificatore univoco del pacchetto -->
 		<ApplicationId>com.alessandrogozzi.mioeco</ApplicationId>
-
-		<!-- Versione dell'app -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<!-- Soppressione avvisi SDK ed EOL -->
+		<!-- Soppressione avvisi fine supporto .NET 8 -->
 		<CheckEolTargetFramework>false</CheckEolTargetFramework>
 		<SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
 
-		<!-- Versione minima supportata Android (Android 5.0 Lollipop) -->
+		<!-- Compatibilità Android 5.0+ per vecchi dispositivi -->
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
@@ -34,10 +30,10 @@
 		<!-- Icona App -->
 		<MauiIcon Include="Resources\AppIcon\icon_app_logo.png" ResourceName="appicon" Color="#FFFFFF" />
 
-		<!-- Splash Screen bianco neutro senza bot viola -->
-		<MauiSplashScreen Color="#FFFFFF" />
+		<!-- Splash Screen originale .NET MAUI -->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
-		<!-- Immagini, Font e Asset -->
+		<!-- Risorse grafiche e font -->
 		<MauiImage Include="Resources\Images\*" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		<MauiFont Include="Resources\Fonts\*" />
