@@ -10,7 +10,7 @@ namespace AlessandroGozzi.AppAAC.MobileGUI.ViewModels
 {
     public partial class ActionStepItem : ObservableObject
     {
-        public RoutineAction Action { get; }
+        public RoutineAction Action { get; set; }
 
         [ObservableProperty]
         private bool _isUnlocked;
@@ -18,10 +18,15 @@ namespace AlessandroGozzi.AppAAC.MobileGUI.ViewModels
         [ObservableProperty]
         private bool _isCompleted;
 
+        [ObservableProperty]
+        private bool _isSelected;
+
+        public bool IsAddButton { get; set; }
+
         public ActionStepItem(RoutineAction action, bool isUnlocked = false)
         {
             Action = action;
-            _isUnlocked = isUnlocked; 
+            _isUnlocked = isUnlocked;
             _isCompleted = false;
         }
     }

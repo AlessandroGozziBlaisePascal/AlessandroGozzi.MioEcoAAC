@@ -12,4 +12,14 @@ public partial class ActivityPage : ContentPage
         _viewModel = viewModel;
         BindingContext = _viewModel;
     }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (ActivityViewModel.NeedsRefresh && BindingContext is ActivityViewModel vm && Guid.TryParse(vm.RoutineId, out var routineGuid))
+        {
+            ActivityViewModel.NeedsRefresh = false;
+            _ = vm.LoadActivitiesAsync(routineGuid);
+        }
+    }
 }

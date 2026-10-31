@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using AlessandroGozzi.AppAAC.Domain.Enums;
+using AlessandroGozzi.AppAAC.Domain.Interfaces;
 using AlessandroGozzi.AppAAC.Domain.Models;
-using AlessandroGozzi.AppAAC.Domain.Repositories;
 using AlessandroGozzi.AppAAC.Infrastructure;
 using SQLite;
 
@@ -172,6 +172,18 @@ public class RoutineRepository : IRoutineRepository
         }
     }
 
+    // ---ACTIONS---
+    public async Task SaveActionAsync(Guid activityId, RoutineAction action)
+    {
+        action.ActivityId = activityId;
+
+        if (action.Id == Guid.Empty)
+        {
+            action.Id = Guid.NewGuid();
+        }
+
+        await _database!.InsertOrReplaceAsync(action);
+    }
     public async Task<List<RoutineAction>> GetActionsByActivityIdAsync(Guid activityId, CancellationToken cancellationToken = default)
     {
         var activity = await _database!.Table<Activity>()

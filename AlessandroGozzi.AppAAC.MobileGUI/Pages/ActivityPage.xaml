@@ -5,12 +5,14 @@
              xmlns:viewmodels="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
              x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.ActivityPage"
              x:DataType="viewmodels:ActivityViewModel"
+             x:Name="ThisActivityPage"
              BackgroundColor="#F0F4F8"
              Shell.BackButtonBehavior="{BackButtonBehavior IsVisible=False}">
 
-    <!-- Barra superiore personalizzata coordinata -->
+    <!-- Barra superiore coordinata -->
     <Shell.TitleView>
-        <Grid ColumnDefinitions="Auto, *" VerticalOptions="Center" ColumnSpacing="12">
+        <Grid ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center" Margin="0,0,16,0" ColumnSpacing="12">
+            <!-- Freccia Torna Indietro -->
             <ImageButton Grid.Column="0"
                          Command="{Binding TornaIndietroCommand}"
                          BackgroundColor="Transparent"
@@ -26,86 +28,214 @@
                 </ImageButton.Source>
             </ImageButton>
 
+            <!-- Titolo Routine -->
             <Label Grid.Column="1"
                    Text="{Binding RoutineTitle}"
                    FontSize="20"
                    FontAttributes="Bold"
                    TextColor="#0F2A4A"
+                   LineBreakMode="TailTruncation"
                    VerticalTextAlignment="Center" />
+
+            <!-- Tasto Toggle Modifica -->
+            <Border Grid.Column="2"
+                    StrokeThickness="1.5"
+                    StrokeShape="RoundRectangle 10"
+                    Padding="16,8">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Stroke" Value="#0284C7" />
+                        <Setter Property="BackgroundColor" Value="#FFFFFF" />
+                        <Style.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsEditMode}" Value="True">
+                                <Setter Property="Stroke" Value="#16A34A" />
+                                <Setter Property="BackgroundColor" Value="#F0FDF4" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ToggleEditModeCommand}" />
+                </Border.GestureRecognizers>
+
+                <Label Text="{Binding EditButtonText}"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       VerticalTextAlignment="Center">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Setter Property="TextColor" Value="#0284C7" />
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding IsEditMode}" Value="True">
+                                    <Setter Property="TextColor" Value="#16A34A" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
+            </Border>
         </Grid>
     </Shell.TitleView>
 
-    <!-- Griglia principale con area scroll e barra inferiore fissa -->
+    <!-- Layout Principale: Griglia + Barra inferiore fissa -->
     <Grid RowDefinitions="*, Auto">
 
-        <!-- Selezione Attività -->
-        <CollectionView Grid.Row="0"
-                        ItemsSource="{Binding Activities}"
-                        SelectedItem="{Binding SelectedActivity, Mode=TwoWay}"
-                        SelectionMode="Single"
-                        Margin="16">
+        <!-- 1. GRIGLIA ATTIVITÀ A SCORRIMENTO -->
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="14" Margin="16">
 
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical"
-                                 Span="2"
-                                 HorizontalItemSpacing="14"
-                                 VerticalItemSpacing="14" />
-            </CollectionView.ItemsLayout>
+                <CollectionView ItemsSource="{Binding Activities}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="2"
+                                         HorizontalItemSpacing="14"
+                                         VerticalItemSpacing="14" />
+                    </CollectionView.ItemsLayout>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:Activity">
-                    <Border x:Name="ActivityCard"
-                            StrokeShape="RoundRectangle 22"
-                            Stroke="#E2E8F0"
-                            StrokeThickness="2"
-                            BackgroundColor="#FFFFFF"
-                            Padding="14"
-                            HeightRequest="190">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:Activity">
+                            <Grid HeightRequest="190">
 
-                        <Border.Shadow>
-                            <Shadow Brush="#150284C7"
-                                    Offset="0,4"
-                                    Radius="10"
-                                    Opacity="0.4" />
-                        </Border.Shadow>
+                                <!-- CARD ATTIVITÀ NORMALE -->
+                                <Border StrokeShape="RoundRectangle 22"
+                                        Padding="14">
 
-                        <!-- Feedback visivo allineato allo stile MioEco -->
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Normal" />
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="Stroke" Value="#0284C7" />
-                                        <Setter Property="StrokeThickness" Value="3" />
-                                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                                    <Border.Shadow>
+                                        <Shadow Brush="#150284C7"
+                                                Offset="0,4"
+                                                Radius="10"
+                                                Opacity="0.4" />
+                                    </Border.Shadow>
 
-                        <VerticalStackLayout Spacing="10"
-                                             HorizontalOptions="Center"
-                                             VerticalOptions="Center">
-                            <Image Source="{Binding ImageUrl}"
-                                   WidthRequest="95"
-                                   HeightRequest="95"
-                                   Aspect="AspectFit"
-                                   HorizontalOptions="Center" />
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Stroke" Value="#E2E8F0" />
+                                            <Setter Property="StrokeThickness" Value="2" />
+                                            <Setter Property="BackgroundColor" Value="#FFFFFF" />
 
-                            <Label Text="{Binding Name}"
-                                   FontSize="18"
-                                   FontAttributes="Bold"
-                                   TextColor="#0F2A4A"
-                                   HorizontalTextAlignment="Center"
-                                   LineBreakMode="TailTruncation"
-                                   MaxLines="2" />
-                        </VerticalStackLayout>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+                                            <Style.Triggers>
+                                                <!-- Selezionata in modalità normale: AZZURRO -->
+                                                <MultiTrigger TargetType="Border">
+                                                    <MultiTrigger.Conditions>
+                                                        <BindingCondition Binding="{Binding IsSelected}" Value="True" />
+                                                        <BindingCondition Binding="{Binding Source={x:Reference ThisActivityPage}, Path=BindingContext.IsEditMode}" Value="False" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Stroke" Value="#0284C7" />
+                                                    <Setter Property="StrokeThickness" Value="3" />
+                                                    <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                                                </MultiTrigger>
 
-        <!-- Barra fissa inferiore con il pulsante Seleziona Attività -->
+                                                <!-- Selezionata in modalità modifica: ROSSO -->
+                                                <MultiTrigger TargetType="Border">
+                                                    <MultiTrigger.Conditions>
+                                                        <BindingCondition Binding="{Binding IsSelected}" Value="True" />
+                                                        <BindingCondition Binding="{Binding Source={x:Reference ThisActivityPage}, Path=BindingContext.IsEditMode}" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Stroke" Value="#EF4444" />
+                                                    <Setter Property="StrokeThickness" Value="3" />
+                                                    <Setter Property="BackgroundColor" Value="#FEE2E2" />
+                                                </MultiTrigger>
+
+                                                <!-- Nasconde se è il segnaposto '+' -->
+                                                <DataTrigger TargetType="Border" Binding="{Binding IsAddButton}" Value="True">
+                                                    <Setter Property="IsVisible" Value="False" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference ThisActivityPage}, Path=BindingContext.SelectActivityCommand}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Border.GestureRecognizers>
+
+                                    <VerticalStackLayout Spacing="10"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center">
+
+                                        <Image Source="{Binding ImageUrl}"
+                                               WidthRequest="95"
+                                               HeightRequest="95"
+                                               Aspect="AspectFit"
+                                               HorizontalOptions="Center" />
+
+                                        <Label Text="{Binding Name}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="#0F2A4A"
+                                               HorizontalTextAlignment="Center"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2" />
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <!-- CARD TRATTEGGIATA CON '+' (Visibile solo in Edit Mode) -->
+                                <Border Stroke="#0284C7"
+                                        StrokeThickness="2"
+                                        StrokeDashArray="4,2"
+                                        StrokeShape="RoundRectangle 22"
+                                        BackgroundColor="#F0F9FF"
+                                        Padding="14"
+                                        IsVisible="False">
+
+                                    <Border.Triggers>
+                                        <DataTrigger TargetType="Border" Binding="{Binding IsAddButton}" Value="True">
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Border.Triggers>
+
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference ThisActivityPage}, Path=BindingContext.AggiungiAttivitaCommand}" />
+                                    </Border.GestureRecognizers>
+
+                                    <VerticalStackLayout Spacing="10"
+                                                         HorizontalOptions="Center"
+                                                         VerticalOptions="Center">
+                                        <Label Text="+"
+                                               FontSize="48"
+                                               FontAttributes="Bold"
+                                               TextColor="#0284C7"
+                                               HorizontalOptions="Center" />
+
+                                        <Label Text="Aggiungi attività"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="#0284C7"
+                                               HorizontalTextAlignment="Center"
+                                               HorizontalOptions="Center" />
+                                    </VerticalStackLayout>
+                                </Border>
+
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                    <CollectionView.EmptyView>
+                        <Label Text="Nessuna attività presente per questa routine."
+                               FontSize="16"
+                               TextColor="#64748B"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center"
+                               Margin="0,40,0,0" />
+                    </CollectionView.EmptyView>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Indicatore di caricamento -->
+        <ActivityIndicator Grid.Row="0"
+                           IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}"
+                           Color="#0284C7"
+                           WidthRequest="48"
+                           HeightRequest="48"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+
+        <!-- 2. BARRA INFERIORE (Seleziona Attività / Elimina Attività) -->
         <Border Grid.Row="1"
                 BackgroundColor="#FFFFFF"
                 StrokeShape="RoundRectangle 24,24,0,0"
@@ -118,14 +248,41 @@
                         Opacity="0.5" />
             </Border.Shadow>
 
-            <Button Text="Seleziona Attività"
-                    Command="{Binding ConfermaAttivitaCommand}"
-                    BackgroundColor="#0284C7"
-                    TextColor="#FFFFFF"
-                    FontSize="18"
-                    FontAttributes="Bold"
-                    CornerRadius="16"
-                    HeightRequest="56" />
+            <Grid>
+                <!-- Tasto 1: Seleziona Attività (Normale) -->
+                <Button Text="Seleziona Attività"
+                        Command="{Binding ConfermaAttivitaCommand}"
+                        BackgroundColor="#0284C7"
+                        TextColor="#FFFFFF"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        CornerRadius="16"
+                        HeightRequest="56">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsEditMode}" Value="True">
+                            <Setter Property="IsVisible" Value="False" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+
+                <!-- Tasto 2: Elimina Attività (Edit Mode) -->
+                <Button Text="Elimina Attività"
+                        Command="{Binding EliminaAttivitaCommand}"
+                        CommandParameter="{Binding SelectedActivity}"
+                        BackgroundColor="#EF4444"
+                        TextColor="#FFFFFF"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        CornerRadius="16"
+                        HeightRequest="56"
+                        IsVisible="False">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button" Binding="{Binding IsEditMode}" Value="True">
+                            <Setter Property="IsVisible" Value="True" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
+            </Grid>
         </Border>
 
     </Grid>

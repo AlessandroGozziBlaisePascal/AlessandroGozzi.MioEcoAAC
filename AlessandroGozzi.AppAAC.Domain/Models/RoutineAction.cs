@@ -8,13 +8,17 @@ using SQLite;
 
 namespace AlessandroGozzi.AppAAC.Domain.Models
 {
-    public class RoutineAction
+    public partial class RoutineAction: ObservableObject
     {
         [PrimaryKey]
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Indexed]
         public Guid ActivityId { get; set; }
+
+        [ObservableProperty]
+        [property: Ignore]
+        private bool _isSelected;
 
         public int Order { get; set; }
 
@@ -23,6 +27,7 @@ namespace AlessandroGozzi.AppAAC.Domain.Models
         public string SpeechText { get; set; } = string.Empty;
         public bool IsDeleted { get; set; } = false;
         public bool IsFinished { get; set; } = false;
+        public bool IsAddButton { get; set; } = false;
 
         public RoutineAction() { }
 

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
+             x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Impostazioni &amp; Info"
+             BackgroundColor="#F0F4F8">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <!-- 1. SUPPORTO E SEGNALAZIONE BUG -->
+            <Border StrokeShape="RoundRectangle 20"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1.5"
+                    BackgroundColor="#FFFFFF"
+                    Padding="18">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Assistenza e Feedback"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#0F2A4A" />
+
+                    <Label Text="Hai riscontrato un problema o vuoi suggerire nuove funzioni o pittogrammi? Invia una segnalazione diretta allo sviluppatore."
+                           FontSize="14"
+                           TextColor="#64748B" />
+
+                    <Button Text="✉️ Invia segnalazione per email"
+                            Command="{Binding InviaSegnalazioneCommand}"
+                            BackgroundColor="#0284C7"
+                            TextColor="#FFFFFF"
+                            FontAttributes="Bold"
+                            FontSize="15"
+                            CornerRadius="14"
+                            HeightRequest="48"
+                            Margin="0,6,0,0" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 2. CREDITI ARASAAC (OBBLIGATORIO PER LICENZA) -->
+            <Border StrokeShape="RoundRectangle 20"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1.5"
+                    BackgroundColor="#FFFFFF"
+                    Padding="18">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Simboli e Pittogrammi"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#0F2A4A" />
+
+                    <Label Text="I simboli pittografici utilizzati in questa applicazione appartengono al Governo di Aragona e sono stati creati da Sergio Palao per ARASAAC (http://www.arasaac.org), che li distribuisce sotto licenza Creative Commons BY-NC-SA."
+                           FontSize="13"
+                           TextColor="#475569"
+                           LineHeight="1.3" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 3. DETTAGLI APPLICAZIONE -->
+            <Border StrokeShape="RoundRectangle 20"
+                    Stroke="#E2E8F0"
+                    StrokeThickness="1.5"
+                    BackgroundColor="#FFFFFF"
+                    Padding="18">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Informazioni App"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="#0F2A4A" />
+
+                    <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" RowSpacing="8">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Versione App" TextColor="#64748B" FontSize="14" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="1.0.0" TextColor="#0F2A4A" FontAttributes="Bold" FontSize="14" />
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="Sviluppatore" TextColor="#64748B" FontSize="14" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="Alessandro Gozzi" TextColor="#0F2A4A" FontAttributes="Bold" FontSize="14" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

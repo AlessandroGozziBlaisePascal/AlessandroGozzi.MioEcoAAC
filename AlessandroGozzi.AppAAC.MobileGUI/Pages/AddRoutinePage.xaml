@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AlessandroGozzi.AppAAC.MobileGUI.ViewModels"
+             xmlns:dtos="clr-namespace:AlessandroGozzi.AppAAC.Domain.Dtos;assembly=AlessandroGozzi.AppAAC.Domain"
+             x:Class="AlessandroGozzi.AppAAC.MobileGUI.Pages.AddRoutinePage"
+             x:DataType="vm:AddRoutineViewModel"
+             x:Name="ThisPage"
+             Title="Nuova Routine"
+             BackgroundColor="#F0F4F8">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="20" Padding="20">
+
+                <!-- 1. SEZIONE NOME ROUTINE -->
+                <Border StrokeShape="RoundRectangle 18"
+                        Stroke="#E2E8F0"
+                        StrokeThickness="1.5"
+                        BackgroundColor="White"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Nome Routine"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#0F2A4A" />
+
+                        <Entry Text="{Binding RoutineName, Mode=TwoWay}"
+                               Placeholder="Es. Visita dentista, Piscina..."
+                               PlaceholderColor="#94A3B8"
+                               TextColor="#0F2A4A"
+                               FontSize="17"
+                               ClearButtonVisibility="WhileEditing" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- 2. ANTEPRIMA SIMBOLO SELEZIONATO -->
+                <Border StrokeShape="RoundRectangle 22"
+                        Stroke="#0284C7"
+                        StrokeThickness="2"
+                        BackgroundColor="White"
+                        HeightRequest="150"
+                        WidthRequest="150"
+                        HorizontalOptions="Center"
+                        Padding="12">
+
+                    <Grid>
+                        <!-- Immagine quando selezionata -->
+                        <Image Source="{Binding SelectedPictogram.ImageUrl}"
+                               Aspect="AspectFit"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Setter Property="IsVisible" Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="Image" Binding="{Binding SelectedPictogram}" Value="{x:Null}">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+
+                        <!-- Placeholder quando non c'è ancora un'immagine -->
+                        <VerticalStackLayout VerticalOptions="Center"
+                                             HorizontalOptions="Center"
+                                             Spacing="4">
+                            <VerticalStackLayout.Style>
+                                <Style TargetType="VerticalStackLayout">
+                                    <Setter Property="IsVisible" Value="False" />
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="VerticalStackLayout" Binding="{Binding SelectedPictogram}" Value="{x:Null}">
+                                            <Setter Property="IsVisible" Value="True" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </VerticalStackLayout.Style>
+
+                            <Label Text="🖼️"
+                                   FontSize="36"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Nessun simbolo"
+                                   FontSize="12"
+                                   TextColor="#94A3B8"
+                                   HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- 3. RICERCA CATALOGO ARASAAC -->
+                <Border StrokeShape="RoundRectangle 18"
+                        Stroke="#E2E8F0"
+                        StrokeThickness="1.5"
+                        BackgroundColor="White"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Cerca simbolo su ARASAAC"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="#0F2A4A" />
+
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                            <Entry Grid.Column="0"
+                                   Text="{Binding SearchQuery, Mode=TwoWay}"
+                                   Placeholder="Digita per cercare (es. dentista)"
+                                   PlaceholderColor="#94A3B8"
+                                   TextColor="#0F2A4A"
+                                   FontSize="15"
+                                   ReturnCommand="{Binding SearchSymbolsCommand}" />
+
+                            <Button Grid.Column="1"
+                                    Text="🔍 Cerca"
+                                    Command="{Binding SearchSymbolsCommand}"
+                                    BackgroundColor="#0284C7"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="12"
+                                    Padding="14,0"
+                                    HeightRequest="44" />
+                        </Grid>
+
+                        <!-- Indicatore ricerca -->
+                        <ActivityIndicator IsRunning="{Binding IsSearching}"
+                                           IsVisible="{Binding IsSearching}"
+                                           Color="#0284C7"
+                                           HeightRequest="30" />
+
+                        <!-- Messaggio di errore o nessun risultato -->
+                        <Label Text="{Binding ErrorMessage}"
+                               TextColor="#EF4444"
+                               FontSize="14"
+                               HorizontalOptions="Center">
+                            <Label.Style>
+                                <Style TargetType="Label">
+                                    <Setter Property="IsVisible" Value="True" />
+                                    <Style.Triggers>
+                                        <DataTrigger TargetType="Label" Binding="{Binding ErrorMessage}" Value="">
+                                            <Setter Property="IsVisible" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Label.Style>
+                        </Label>
+
+                        <!-- Griglia dei pittogrammi trovati -->
+                        <CollectionView ItemsSource="{Binding SearchResults}"
+                                        HeightRequest="220"
+                                        SelectionMode="Single"
+                                        SelectedItem="{Binding SelectedPictogram, Mode=TwoWay}">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical"
+                                                 Span="3"
+                                                 HorizontalItemSpacing="10"
+                                                 VerticalItemSpacing="10" />
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dtos:ArasaacPictogramDto">
+                                    <Border StrokeShape="RoundRectangle 14"
+                                            Stroke="#E2E8F0"
+                                            StrokeThickness="1.5"
+                                            BackgroundColor="#F8FAFC"
+                                            HeightRequest="90"
+                                            Padding="8">
+
+                                        <VisualStateManager.VisualStateGroups>
+                                            <VisualStateGroup Name="CommonStates">
+                                                <VisualState Name="Normal" />
+                                                <VisualState Name="Selected">
+                                                    <VisualState.Setters>
+                                                        <Setter Property="Stroke" Value="#0284C7" />
+                                                        <Setter Property="StrokeThickness" Value="2.5" />
+                                                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                                                    </VisualState.Setters>
+                                                </VisualState>
+                                            </VisualStateGroup>
+                                        </VisualStateManager.VisualStateGroups>
+
+                                        <Image Source="{Binding ImageUrl}"
+                                               Aspect="AspectFit"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 4. BARRA AZIONI INFERIORE -->
+        <Border Grid.Row="1"
+                BackgroundColor="White"
+                StrokeShape="RoundRectangle 24,24,0,0"
+                Padding="16,14,16,18"
+                Stroke="#E2E8F0">
+            <Border.Shadow>
+                <Shadow Brush="#10000000"
+                        Offset="0,-4"
+                        Radius="12"
+                        Opacity="0.5" />
+            </Border.Shadow>
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                <!-- Annulla -->
+                <Button Grid.Column="0"
+                        Text="Annulla"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="#F1F5F9"
+                        TextColor="#64748B"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        CornerRadius="16"
+                        HeightRequest="52" />
+
+                <!-- Salva Routine -->
+                <Button Grid.Column="1"
+                        Text="Salva Routine"
+                        Command="{Binding SaveRoutineCommand}"
+                        BackgroundColor="#16A34A"
+                        TextColor="White"
+                        FontSize="16"
+                        FontAttributes="Bold"
+                        CornerRadius="16"
+                        HeightRequest="52" />
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>
