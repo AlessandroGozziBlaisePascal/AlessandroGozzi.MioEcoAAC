@@ -93,8 +93,8 @@ dotnet publish .\AlessandroGozzi.AppAAC.MobileGUI\AlessandroGozzi.AppAAC.MobileG
 ## 📄 Volantino Informativo e QR Code
 
 Inquadra i codici QR dal volantino per scaricare l'app o salvalo per la stampa:
+<img width="1414" height="2000" alt="Volantino_MioEco" src="https://github.com/user-attachments/assets/152b2166-0501-4b41-b03b-e623e8d0889b" />
 
-![Volantino MioEco](./volantino-mioeco.png)
 
 ## 📬 CONTATTI E SUPPORTO
 
