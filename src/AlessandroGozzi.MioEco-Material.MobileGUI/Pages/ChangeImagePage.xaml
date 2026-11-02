@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:AlessandroGozzi.MioEco_Material.MobileGUI.ViewModels"
+             xmlns:dtos="clr-namespace:AlessandroGozzi.MioEco_Material.Domain;assembly=AlessandroGozzi.MioEco-Material.Domain"
+             x:Class="AlessandroGozzi.MioEco_Material.MobileGUI.Pages.ChangeImagePage"
+             x:DataType="vm:ChangeImageViewModel"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#F8FAFC">
+
+    <Grid RowDefinitions="*, Auto">
+
+        <ScrollView Grid.Row="0">
+            <VerticalStackLayout Spacing="16" Padding="18">
+
+                <!-- Header Pagina con tasto Indietro -->
+                <Grid ColumnDefinitions="Auto, *">
+                    <Border StrokeShape="RoundRectangle 10"
+                            Stroke="#E2E8F0"
+                            StrokeThickness="1"
+                            Background="#FFFFFF"
+                            Padding="12, 6">
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding CancelCommand}" />
+                        </Border.GestureRecognizers>
+                        <Label Text="⬅ Indietro" FontSize="14" FontAttributes="Bold" TextColor="#0F2A4A" VerticalOptions="Center" />
+                    </Border>
+                    <Label Grid.Column="1" Text="Cambia Immagine" FontSize="20" FontAttributes="Bold" TextColor="#0F2A4A" VerticalOptions="Center" Margin="14, 0, 0, 0" />
+                </Grid>
+
+                <!-- Titolo della Tessera corrente -->
+                <Border StrokeShape="RoundRectangle 16" Stroke="#E2E8F0" StrokeThickness="1.5" BackgroundColor="White" Padding="16">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Tessera selezionata" FontSize="13" TextColor="#64748B" />
+                        <Label Text="{Binding CardName}" FontSize="18" FontAttributes="Bold" TextColor="#0F2A4A" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Anteprima Immagine Scelta -->
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Border StrokeShape="RoundRectangle 18"
+                            Stroke="#0284C7"
+                            StrokeThickness="2"
+                            BackgroundColor="White"
+                            HeightRequest="140"
+                            WidthRequest="140"
+                            Padding="10">
+                        <Image Source="{Binding PreviewImagePath}"
+                               Aspect="AspectFit"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+                    </Border>
+
+                    <!-- Carica da Galleria -->
+                    <Button Text="📷 Carica da Galleria"
+                            Command="{Binding PickPhotoFromGalleryCommand}"
+                            BackgroundColor="#F1F5F9"
+                            TextColor="#0284C7"
+                            FontAttributes="Bold"
+                            FontSize="14"
+                            CornerRadius="12"
+                            HeightRequest="42"
+                            Padding="16, 0"
+                            HorizontalOptions="Center" />
+                </VerticalStackLayout>
+
+                <!-- Ricerca ARASAAC -->
+                <Border StrokeShape="RoundRectangle 16" Stroke="#E2E8F0" StrokeThickness="1.5" BackgroundColor="White" Padding="16">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Oppure cerca su ARASAAC" FontSize="15" FontAttributes="Bold" TextColor="#0F2A4A" />
+
+                        <Grid ColumnDefinitions="*, Auto" ColumnSpacing="10">
+                            <Entry Grid.Column="0"
+                                   Text="{Binding SearchQuery, Mode=TwoWay}"
+                                   Placeholder="Cerca simbolo..."
+                                   TextColor="#0F2A4A"
+                                   ReturnCommand="{Binding SearchSymbolsCommand}" />
+                            <Button Grid.Column="1"
+                                    Text="🔍 Cerca"
+                                    Command="{Binding SearchSymbolsCommand}"
+                                    BackgroundColor="#0284C7"
+                                    TextColor="White"
+                                    FontAttributes="Bold"
+                                    CornerRadius="10"
+                                    HeightRequest="44" />
+                        </Grid>
+
+                        <ActivityIndicator IsRunning="{Binding IsSearching}" IsVisible="{Binding IsSearching}" Color="#0284C7" HeightRequest="25" />
+
+                        <Label Text="{Binding ErrorMessage}" TextColor="#EF4444" FontSize="13" HorizontalOptions="Center">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label" Binding="{Binding ErrorMessage}" Value="">
+                                    <Setter Property="IsVisible" Value="False" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+
+                        <CollectionView ItemsSource="{Binding SearchResults}"
+                                        HeightRequest="200"
+                                        SelectionMode="Single"
+                                        SelectedItem="{Binding SelectedPictogram, Mode=TwoWay}">
+                            <CollectionView.ItemsLayout>
+                                <GridItemsLayout Orientation="Vertical" Span="3" HorizontalItemSpacing="8" VerticalItemSpacing="8" />
+                            </CollectionView.ItemsLayout>
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="dtos:ArasaacPictogramDto">
+                                    <Border StrokeShape="RoundRectangle 12"
+                                            Stroke="#E2E8F0"
+                                            StrokeThickness="1.5"
+                                            BackgroundColor="#F8FAFC"
+                                            HeightRequest="85"
+                                            Padding="6">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ChangeImageViewModel}}, Path=SelectPictogramCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                        <Image Source="{Binding ImageUrl}" Aspect="AspectFit" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Barra Azioni Inferiore -->
+        <Border Grid.Row="1" BackgroundColor="White" StrokeShape="RoundRectangle 20,20,0,0" Padding="16, 12" Stroke="#E2E8F0">
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="12">
+                <Button Grid.Column="0" Text="Annulla" Command="{Binding CancelCommand}" BackgroundColor="#F1F5F9" TextColor="#64748B" FontSize="15" FontAttributes="Bold" CornerRadius="12" HeightRequest="48" />
+                <Button Grid.Column="1" Text="Salva Nuova Immagine" Command="{Binding SaveImageCommand}" BackgroundColor="#16A34A" TextColor="White" FontSize="15" FontAttributes="Bold" CornerRadius="12" HeightRequest="48" />
+            </Grid>
+        </Border>
+
+    </Grid>
+</ContentPage>

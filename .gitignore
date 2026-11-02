@@ -1,0 +1,9 @@
+.vs/
+[Db]in/
+[Oo]bj/
+*.user
+*.suo
+*.userossc
+*.userprefs
+.DS_Store
+Thumbs.db

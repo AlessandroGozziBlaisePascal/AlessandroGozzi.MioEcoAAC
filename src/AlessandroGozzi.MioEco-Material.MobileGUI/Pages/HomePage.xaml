@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:AlessandroGozzi.MioEco_Material.Domain;assembly=AlessandroGozzi.MioEco-Material.Domain"
+             xmlns:viewmodels="clr-namespace:AlessandroGozzi.MioEco_Material.MobileGUI.ViewModels"
+             x:Class="AlessandroGozzi.MioEco_Material.MobileGUI.Pages.HomePage"
+             x:DataType="viewmodels:HomeViewModel"
+             BackgroundColor="#F8FAFC"
+             NavigationPage.HasNavigationBar="False"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="Auto, Auto, *, Auto">
+
+        <!-- 1. Header superiore: Titolo, Tasto Modifica/Fine e Ingranaggio -->
+        <Grid Grid.Row="0"
+              Padding="18, 16, 16, 12"
+              ColumnDefinitions="*, Auto"
+              BackgroundColor="#FFFFFF">
+
+            <Label Grid.Column="0"
+                   Text="Materiale"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#0F2A4A"
+                   VerticalOptions="Center" />
+
+            <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+
+                <!-- Tasto Modifica / Fine -->
+                <Button Command="{Binding ToggleEditModeCommand}"
+                        FontSize="14"
+                        FontAttributes="Bold"
+                        CornerRadius="8"
+                        HeightRequest="38"
+                        Padding="14, 0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Text" Value="Modifica" />
+                            <Setter Property="TextColor" Value="#0F2A4A" />
+                            <Setter Property="BackgroundColor" Value="#F8FAFC" />
+                            <Setter Property="BorderColor" Value="#CBD5E1" />
+                            <Setter Property="BorderWidth" Value="1.5" />
+                            <Style.Triggers>
+                                <DataTrigger TargetType="Button" Binding="{Binding IsEditMode}" Value="True">
+                                    <Setter Property="Text" Value="✓ Fine" />
+                                    <Setter Property="TextColor" Value="#16A34A" />
+                                    <Setter Property="BackgroundColor" Value="#F0FDF4" />
+                                    <Setter Property="BorderColor" Value="#16A34A" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Tasto Ingranaggio -->
+                <Border Stroke="#CBD5E1"
+                        StrokeThickness="1.5"
+                        Background="#F8FAFC"
+                        HeightRequest="38"
+                        WidthRequest="38"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="8" />
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnSettingsGearClicked" />
+                    </Border.GestureRecognizers>
+                    <Label Text="⚙️"
+                           FontSize="18"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+                </Border>
+
+            </HorizontalStackLayout>
+        </Grid>
+
+        <!-- 2. Filtro Categorie: Griglia fissa 2x3 -->
+        <Grid Grid.Row="1"
+              Padding="12, 10"
+              RowSpacing="8"
+              ColumnSpacing="8"
+              ColumnDefinitions="*, *, *"
+              RowDefinitions="Auto, Auto">
+
+            <!-- Bevande -->
+            <Button Grid.Row="0" Grid.Column="0"
+                    Text="🥤 Bevande" FontSize="12" FontAttributes="Bold" TextColor="#0F2A4A" BackgroundColor="#FFFFFF"
+                    BorderColor="#CBD5E1" BorderWidth="1.5" CornerRadius="8" Padding="0" HeightRequest="42"
+                    Command="{Binding ToggleCategoryCommand}" CommandParameter="Bevande">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsBevandeSelected}" Value="True">
+                        <Setter Property="BorderColor" Value="#0284C7" />
+                        <Setter Property="BorderWidth" Value="2.5" />
+                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                        <Setter Property="TextColor" Value="#0369A1" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <!-- Cibo -->
+            <Button Grid.Row="0" Grid.Column="1"
+                    Text="🍎 Cibo" FontSize="13" FontAttributes="Bold" TextColor="#0F2A4A" BackgroundColor="#FFFFFF"
+                    BorderColor="#CBD5E1" BorderWidth="1.5" CornerRadius="8" Padding="0" HeightRequest="42"
+                    Command="{Binding ToggleCategoryCommand}" CommandParameter="Cibo">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsCiboSelected}" Value="True">
+                        <Setter Property="BorderColor" Value="#0284C7" />
+                        <Setter Property="BorderWidth" Value="2.5" />
+                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                        <Setter Property="TextColor" Value="#0369A1" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <!-- Bisogni -->
+            <Button Grid.Row="0" Grid.Column="2"
+                    Text="🚾 Bisogni" FontSize="12" FontAttributes="Bold" TextColor="#0F2A4A" BackgroundColor="#FFFFFF"
+                    BorderColor="#CBD5E1" BorderWidth="1.5" CornerRadius="8" Padding="0" HeightRequest="42"
+                    Command="{Binding ToggleCategoryCommand}" CommandParameter="Bisogni">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsBisogniSelected}" Value="True">
+                        <Setter Property="BorderColor" Value="#0284C7" />
+                        <Setter Property="BorderWidth" Value="2.5" />
+                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                        <Setter Property="TextColor" Value="#0369A1" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <!-- Attività -->
+            <Button Grid.Row="1" Grid.Column="0"
+                    Text="🎨 Attività" FontSize="12" FontAttributes="Bold" TextColor="#0F2A4A" BackgroundColor="#FFFFFF"
+                    BorderColor="#CBD5E1" BorderWidth="1.5" CornerRadius="8" Padding="0" HeightRequest="42"
+                    Command="{Binding ToggleCategoryCommand}" CommandParameter="Attivita">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsAttivitaSelected}" Value="True">
+                        <Setter Property="BorderColor" Value="#0284C7" />
+                        <Setter Property="BorderWidth" Value="2.5" />
+                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                        <Setter Property="TextColor" Value="#0369A1" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <!-- Persone -->
+            <Button Grid.Row="1" Grid.Column="1"
+                    Text="👥 Persone" FontSize="12" FontAttributes="Bold" TextColor="#0F2A4A" BackgroundColor="#FFFFFF"
+                    BorderColor="#CBD5E1" BorderWidth="1.5" CornerRadius="8" Padding="0" HeightRequest="42"
+                    Command="{Binding ToggleCategoryCommand}" CommandParameter="Persone">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsPersoneSelected}" Value="True">
+                        <Setter Property="BorderColor" Value="#0284C7" />
+                        <Setter Property="BorderWidth" Value="2.5" />
+                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                        <Setter Property="TextColor" Value="#0369A1" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+            <!-- Emozioni -->
+            <Button Grid.Row="1" Grid.Column="2"
+                    Text="😊 Emozioni" FontSize="12" FontAttributes="Bold" TextColor="#0F2A4A" BackgroundColor="#FFFFFF"
+                    BorderColor="#CBD5E1" BorderWidth="1.5" CornerRadius="8" Padding="0" HeightRequest="42"
+                    Command="{Binding ToggleCategoryCommand}" CommandParameter="Emozioni">
+                <Button.Triggers>
+                    <DataTrigger TargetType="Button" Binding="{Binding IsEmozioniSelected}" Value="True">
+                        <Setter Property="BorderColor" Value="#0284C7" />
+                        <Setter Property="BorderWidth" Value="2.5" />
+                        <Setter Property="BackgroundColor" Value="#E0F2FE" />
+                        <Setter Property="TextColor" Value="#0369A1" />
+                    </DataTrigger>
+                </Button.Triggers>
+            </Button>
+
+        </Grid>
+
+        <!-- 3. Griglia FlashCard con Header dinamico per "+ Aggiungi" -->
+        <CollectionView Grid.Row="2"
+                        ItemsSource="{Binding FilteredCards}"
+                        SelectionMode="None"
+                        Margin="12, 6, 12, 6">
+
+            <CollectionView.Header>
+                <VerticalStackLayout>
+                    <Border Stroke="#0284C7"
+                            StrokeThickness="2"
+                            StrokeDashArray="4,4"
+                            Background="#F0F9FF"
+                            HeightRequest="110"
+                            Margin="4, 4, 4, 12"
+                            IsVisible="{Binding IsEditMode}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AddFlashCardCommand}" />
+                        </Border.GestureRecognizers>
+                        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="4">
+                            <Label Text="+" FontSize="32" FontAttributes="Bold" TextColor="#0284C7" HorizontalOptions="Center" />
+                            <Label Text="Aggiungi tessera" FontSize="15" FontAttributes="Bold" TextColor="#0284C7" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </CollectionView.Header>
+
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="12" VerticalItemSpacing="12" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:FlashCard">
+                    <Border Stroke="#E2E8F0"
+                            StrokeThickness="1.5"
+                            Background="#FFFFFF"
+                            Padding="10"
+                            HeightRequest="190">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="20" />
+                        </Border.StrokeShape>
+
+                        <Border.Triggers>
+                            <DataTrigger TargetType="Border" Binding="{Binding IsSelected}" Value="True">
+                                <Setter Property="Stroke" Value="#EF4444" />
+                                <Setter Property="StrokeThickness" Value="2.5" />
+                                <Setter Property="Background" Value="#FEE2E2" />
+                            </DataTrigger>
+                        </Border.Triggers>
+
+                        <Border.Shadow>
+                            <Shadow Brush="#10000000" Offset="0, 4" Radius="10" Opacity="0.7" />
+                        </Border.Shadow>
+
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=SelectCardCommand}"
+                                                  CommandParameter="{Binding .}" />
+                        </Border.GestureRecognizers>
+
+                        <Grid RowDefinitions="*, Auto">
+                            <Image Grid.Row="0"
+                                   Source="{Binding ImagePath}"
+                                   Aspect="AspectFit"
+                                   HeightRequest="105"
+                                   WidthRequest="105"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"
+                                   Margin="2" />
+
+                            <Border Grid.Row="0"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Start"
+                                    HeightRequest="34"
+                                    WidthRequest="34"
+                                    Stroke="#0284C7"
+                                    StrokeThickness="1.5"
+                                    Background="#FFFFFF"
+                                    IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=IsEditMode}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="17" />
+                                </Border.StrokeShape>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:HomeViewModel}}, Path=ChangeCardImageCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Label Text="📷" FontSize="15" HorizontalOptions="Center" VerticalOptions="Center" />
+                            </Border>
+
+                            <Label Grid.Row="1"
+                                   Text="{Binding DisplayText}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#0F2A4A"
+                                   HorizontalTextAlignment="Center"
+                                   LineBreakMode="TailTruncation"
+                                   Margin="0, 4, 0, 2" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- 4. Pulsantone Rosso "Elimina Tessera" -->
+        <Border Grid.Row="3"
+                BackgroundColor="#FFFFFF"
+                StrokeShape="RoundRectangle 20,20,0,0"
+                Padding="16, 12, 16, 16"
+                Stroke="#E2E8F0"
+                IsVisible="{Binding IsEditMode}">
+            <Button Text="Elimina Tessera"
+                    Command="{Binding DeleteSelectedCardCommand}"
+                    BackgroundColor="#EF4444"
+                    TextColor="#FFFFFF"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    CornerRadius="16"
+                    HeightRequest="52" />
+        </Border>
+
+        <!-- 5. Modale Overlay Caregiver (3s) -->
+        <Grid x:Name="CaregiverOverlay"
+              Grid.Row="0"
+              Grid.RowSpan="4"
+              BackgroundColor="#800F172A"
+              IsVisible="False"
+              ZIndex="99">
+
+            <Border Background="#FFFFFF"
+                    StrokeThickness="0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    WidthRequest="310"
+                    Padding="22">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="28" />
+                </Border.StrokeShape>
+                <Border.Shadow>
+                    <Shadow Brush="#40000000" Offset="0, 10" Radius="25" Opacity="0.9" />
+                </Border.Shadow>
+
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto">
+                    <Border Grid.Row="0"
+                            HorizontalOptions="End"
+                            HeightRequest="36"
+                            WidthRequest="36"
+                            StrokeThickness="0"
+                            Background="#F1F5F9">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+                        <Border.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnClosePopupClicked" />
+                        </Border.GestureRecognizers>
+                        <Label Text="✕" FontSize="14" TextColor="#64748B" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+
+                    <Border Grid.Row="1" HeightRequest="72" WidthRequest="72" StrokeThickness="0" Background="#E0F2FE" HorizontalOptions="Center" Margin="0, 0, 0, 16">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="36" />
+                        </Border.StrokeShape>
+                        <Label Text="🔒" FontSize="30" HorizontalOptions="Center" VerticalOptions="Center" />
+                    </Border>
+
+                    <VerticalStackLayout Grid.Row="2" Spacing="8">
+                        <Label Text="Area Riservata Caregiver" FontSize="19" FontAttributes="Bold" TextColor="#0F2A4A" HorizontalTextAlignment="Center" />
+                        <Label Text="Per accedere alle impostazioni e alle informazioni sull'app, tieni premuto il pulsante qui sotto per 3 secondi." FontSize="13" TextColor="#64748B" HorizontalTextAlignment="Center" LineHeight="1.25" />
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Grid.Row="3" Spacing="4" Margin="4, 16, 4, 16">
+                        <ProgressBar x:Name="HoldProgressBar" Progress="0" ProgressColor="#0284C7" HeightRequest="8" />
+                    </VerticalStackLayout>
+
+                    <Button Grid.Row="4"
+                            Text="Tieni premuto per 3s"
+                            FontSize="15"
+                            FontAttributes="Bold"
+                            TextColor="#FFFFFF"
+                            BackgroundColor="#0284C7"
+                            CornerRadius="14"
+                            HeightRequest="50"
+                            HorizontalOptions="Fill"
+                            Pressed="OnCaregiverHoldPressed"
+                            Released="OnCaregiverHoldReleased" />
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 6. MODALE OVERLAY DETTAGLIO COMUNICAZIONE TESSERA -->
+        <Grid Grid.Row="0"
+              Grid.RowSpan="4"
+              BackgroundColor="#800F172A"
+              IsVisible="{Binding IsCardDetailVisible}"
+              ZIndex="100">
+
+            <Grid RowDefinitions="*, Auto" Padding="20, 30, 20, 20">
+
+                <!-- Card Bianca Ingrandita al Centro -->
+                <Border Grid.Row="0"
+                        Background="#FFFFFF"
+                        StrokeThickness="0"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        WidthRequest="310"
+                        Padding="18">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="28" />
+                    </Border.StrokeShape>
+                    <Border.Shadow>
+                        <Shadow Brush="#40000000" Offset="0, 12" Radius="25" Opacity="0.9" />
+                    </Border.Shadow>
+
+                    <Grid RowDefinitions="Auto, *, Auto">
+
+                        <!-- Pulsante Chiudi 'X' in alto a destra -->
+                        <Border Grid.Row="0"
+                                HorizontalOptions="End"
+                                HeightRequest="36"
+                                WidthRequest="36"
+                                StrokeThickness="0"
+                                Background="#F1F5F9">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding CloseCardDetailCommand}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="✕"
+                                   FontSize="14"
+                                   TextColor="#64748B"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+
+                        <!-- Immagine Ingrandita della Tessera (toccandola riproduce la voce) -->
+                        <Border Grid.Row="1"
+                                StrokeThickness="0"
+                                Margin="0, 8, 0, 16">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SpeakCurrentDetailCommand}" />
+                            </Border.GestureRecognizers>
+                            <Image Source="{Binding SelectedCardForDetail.ImagePath}"
+                                   Aspect="AspectFit"
+                                   HeightRequest="210"
+                                   WidthRequest="210"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
+                        </Border>
+
+                        <!-- Nome / Testo Comunicato -->
+                        <Label Grid.Row="2"
+                               Text="{Binding SelectedCardForDetail.DisplayText}"
+                               FontSize="22"
+                               FontAttributes="Bold"
+                               TextColor="#0F2A4A"
+                               HorizontalTextAlignment="Center"
+                               Margin="0, 0, 0, 8" />
+                    </Grid>
+                </Border>
+
+                <!-- Pulsantone Verde "✓ Fatto!" in Basso -->
+                <Button Grid.Row="1"
+                        Text="✓ Fatto!"
+                        Command="{Binding CloseCardDetailCommand}"
+                        BackgroundColor="#16A34A"
+                        TextColor="#FFFFFF"
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        CornerRadius="18"
+                        HeightRequest="56"
+                        HorizontalOptions="Fill"
+                        Margin="10, 0, 10, 8" />
+
+            </Grid>
+        </Grid>
+
+    </Grid>
+</ContentPage>

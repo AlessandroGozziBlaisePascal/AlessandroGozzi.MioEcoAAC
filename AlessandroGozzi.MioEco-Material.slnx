@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/docs/" />
+  <Folder Name="/src/">
+    <Project Path="src/AlessandroGozzi.MioEco-Material.Domain/AlessandroGozzi.MioEco-Material.Domain.csproj" Id="c238fbc4-adcc-4396-920d-f30b1880043f" />
+    <Project Path="src/AlessandroGozzi.MioEco-Material.Infrastructure/AlessandroGozzi.MioEco-Material.Infrastructure.csproj" Id="0e3e0728-ef01-43e8-a986-57bd1be54d1c" />
+    <Project Path="src/AlessandroGozzi.MioEco-Material.MobileGUI/AlessandroGozzi.MioEco-Material.MobileGUI.csproj" Id="1dd915e2-dfd3-4e0f-9e3a-3910208c62d4" />
+  </Folder>
+  <Folder Name="/test/" />
+</Solution>
