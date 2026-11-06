@@ -7,6 +7,7 @@
         public App(IntroPage introPage)
         {
             InitializeComponent();
+            UserAppTheme = AppTheme.Light;
             _introPage = introPage;
         }
 
