@@ -14,10 +14,10 @@
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
 		<!-- Titolo base -->
-		<ApplicationTitle>MioEco</ApplicationTitle>
+		<ApplicationTitle>MioEco-Material</ApplicationTitle>
 
 		<!-- ID univoco -->
-		<ApplicationId>com.alessandrogozzi.mioeco</ApplicationId>
+		<ApplicationId>com.alessandrogozzi.mioecomaterial</ApplicationId>
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
