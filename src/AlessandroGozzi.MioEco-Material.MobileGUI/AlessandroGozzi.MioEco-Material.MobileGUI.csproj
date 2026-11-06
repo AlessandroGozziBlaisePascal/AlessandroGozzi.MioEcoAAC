@@ -17,7 +17,7 @@
 		<ApplicationTitle>MioEco-Material</ApplicationTitle>
 
 		<!-- ID univoco -->
-		<ApplicationId>com.alessandrogozzi.mioecomaterial</ApplicationId>
+		<ApplicationId>com.alessandrogozzi.material</ApplicationId>
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
