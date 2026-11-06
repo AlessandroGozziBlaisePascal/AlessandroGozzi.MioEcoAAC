@@ -4,44 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.37614.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6C83A596-D32D-B35F-00DD-F0C99B673980}"
+	ProjectSection(SolutionItems) = preProject
+		src\AlessandroGozzi.AppAAC.Domain\AlessandroGozzi.AppAAC.Domain.csproj = src\AlessandroGozzi.AppAAC.Domain\AlessandroGozzi.AppAAC.Domain.csproj
+		src\AlessandroGozzi.AppAAC.Infrastructure\AlessandroGozzi.AppAAC.Infrastructure.csproj = src\AlessandroGozzi.AppAAC.Infrastructure\AlessandroGozzi.AppAAC.Infrastructure.csproj
+		src\AlessandroGozzi.AppAAC.MobileGUI\AlessandroGozzi.AppAAC.MobileGUI.csproj = src\AlessandroGozzi.AppAAC.MobileGUI\AlessandroGozzi.AppAAC.MobileGUI.csproj
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F18B343A-5544-4977-AC2B-D48A6EABEA77}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A1A76CFE-C84A-4E95-9A62-AF08C5D4D3DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppAAC.Domain", "AlessandroGozzi.AppAAC.Domain\AlessandroGozzi.AppAAC.Domain.csproj", "{DF1C9130-B714-8927-579B-3280269949C1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppAAC.Infrastructure", "AlessandroGozzi.AppAAC.Infrastructure\AlessandroGozzi.AppAAC.Infrastructure.csproj", "{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlessandroGozzi.AppAAC.MobileGUI", "AlessandroGozzi.AppAAC.MobileGUI\AlessandroGozzi.AppAAC.MobileGUI.csproj", "{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}"
-EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DF1C9130-B714-8927-579B-3280269949C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DF1C9130-B714-8927-579B-3280269949C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DF1C9130-B714-8927-579B-3280269949C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DF1C9130-B714-8927-579B-3280269949C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{DF1C9130-B714-8927-579B-3280269949C1} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
-		{E5B1B073-6CB3-416A-B2DF-5EF30D8E8EAD} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
-		{5257EBC7-DDFE-4E40-8A45-31E7F377ABB5} = {6C83A596-D32D-B35F-00DD-F0C99B673980}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E61840C5-5EB1-4817-88A4-1766906A1001}
