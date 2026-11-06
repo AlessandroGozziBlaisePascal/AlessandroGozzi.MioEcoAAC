@@ -94,11 +94,10 @@ dotnet publish .\AlessandroGozzi.AppAAC.MobileGUI\AlessandroGozzi.AppAAC.MobileG
 
 Inquadra i codici QR dal volantino per scaricare l'app o salvalo per la stampa:
 
-<img width="370" height="523" alt="Volantino_MioEco" src="https://github.com/user-attachments/assets/152b2166-0501-4b41-b03b-e623e8d0889b" />
+<img width="370" height="523" alt="Volantino A5 MioEcoFinalVersion" src="Volantino%20A5%20MioEcoFinalVersion.png" />
 <br>
 
 ---
-
 ## 📬 CONTATTI E SUPPORTO
 
 Per assistenza, dubbi, feedback o proposte di miglioramento:
